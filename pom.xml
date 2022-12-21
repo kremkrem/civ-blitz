@@ -12,7 +12,7 @@
     <artifactId>civblitz</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>civblitz</name>
-    <description>Civ Imperium applicatin</description>
+    <description>Civ Imperium application</description>
     <properties>
         <java.version>17</java.version>
         <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
@@ -74,10 +74,6 @@
             <version>3.12.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jooq</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jooq</artifactId>
@@ -260,47 +256,47 @@
                                     <forcedTypes>
                                         <forcedType>
                                             <userType>technology.rocketjump.civblitz.matches.MatchState</userType>
-                                            <expressions>match_state</expressions>
+                                            <includeExpression>match_state</includeExpression>
                                             <enumConverter>true</enumConverter>
                                         </forcedType>
                                         <forcedType>
                                             <userType>technology.rocketjump.civblitz.mapgen.MapType</userType>
-                                            <expressions>map_type</expressions>
+                                            <includeExpression>map_type</includeExpression>
                                             <enumConverter>true</enumConverter>
                                         </forcedType>
                                         <forcedType>
                                             <userType>technology.rocketjump.civblitz.mapgen.MapSize</userType>
-                                            <expressions>map_size</expressions>
+                                            <includeExpression>map_size</includeExpression>
                                             <enumConverter>true</enumConverter>
                                         </forcedType>
                                         <forcedType>
                                             <userType>technology.rocketjump.civblitz.mapgen.WorldAge</userType>
-                                            <expressions>world_age</expressions>
+                                            <includeExpression>world_age</includeExpression>
                                             <enumConverter>true</enumConverter>
                                         </forcedType>
                                         <forcedType>
                                             <userType>technology.rocketjump.civblitz.mapgen.SeaLevelSetting</userType>
-                                            <expressions>sea_level</expressions>
+                                            <includeExpression>sea_level</includeExpression>
                                             <enumConverter>true</enumConverter>
                                         </forcedType>
                                         <forcedType>
                                             <userType>technology.rocketjump.civblitz.mapgen.TemperatureSetting</userType>
-                                            <expressions>temperature</expressions>
+                                            <includeExpression>temperature</includeExpression>
                                             <enumConverter>true</enumConverter>
                                         </forcedType>
                                         <forcedType>
                                             <userType>technology.rocketjump.civblitz.mapgen.RainfallSetting</userType>
-                                            <expressions>rainfall</expressions>
+                                            <includeExpression>rainfall</includeExpression>
                                             <enumConverter>true</enumConverter>
                                         </forcedType>
                                         <forcedType>
                                             <userType>technology.rocketjump.civblitz.cards.CardPackType</userType>
-                                            <expressions>pack_type</expressions>
+                                            <includeExpression>pack_type</includeExpression>
                                             <enumConverter>true</enumConverter>
                                         </forcedType>
                                         <forcedType>
                                             <userType>technology.rocketjump.civblitz.mapgen.StartEra</userType>
-                                            <expressions>start_era</expressions>
+                                            <includeExpression>start_era</includeExpression>
                                             <enumConverter>true</enumConverter>
                                         </forcedType>
                                     </forcedTypes>
@@ -346,6 +342,16 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>appengine-maven-plugin</artifactId>
+                <version>2.4.4</version>
+                <configuration>
+                    <version>1</version>
+                    <projectId>GCLOUD_CONFIG</projectId>
+                </configuration>
             </plugin>
         </plugins>
     </build>
