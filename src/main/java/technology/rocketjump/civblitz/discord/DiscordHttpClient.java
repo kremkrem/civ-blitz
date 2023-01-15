@@ -3,7 +3,7 @@ package technology.rocketjump.civblitz.discord;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -21,11 +21,17 @@ public class DiscordHttpClient {
 	private final String discordClientSecret;
 	private final String getTokenUrl = "https://discordapp.com/api/v8/oauth2/token";
 	private final String getCurrentUserUrl = "https://discordapp.com/api/users/@me";
+	private final String schemeOverride;
 
 	@Autowired
-	public DiscordHttpClient(Environment env) {
-		this.discordClientId = env.getProperty("spring.security.oauth2.client.registration.discord.client-id");
-		this.discordClientSecret = env.getProperty("spring.security.oauth2.client.registration.discord.client-secret");
+	public DiscordHttpClient(
+			@Value("${spring.security.oauth2.client.registration.discord.redirectSchemeOverride:}") String schemeOverride,
+			@Value("${spring.security.oauth2.client.registration.discord.client-id}") String clientId,
+			@Value("${spring.security.oauth2.client.registration.discord.client-secret}") String clientSecret
+	) {
+		this.discordClientId = clientId;
+		this.discordClientSecret = clientSecret;
+		this.schemeOverride = schemeOverride;
 	}
 
 	public DiscordAccessToken getToken(String code) throws JsonProcessingException {
@@ -38,8 +44,11 @@ public class DiscordHttpClient {
 		map.add("grant_type", "authorization_code");
 		map.add("code", code);
 
-
-		String currentRequestUri = ServletUriComponentsBuilder.fromCurrentRequest().toUriString();
+		ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromCurrentRequest();
+		if (schemeOverride != null && !schemeOverride.isEmpty()) {
+			builder.scheme(schemeOverride);
+		}
+		String currentRequestUri = builder.toUriString();
 		String redirectUri = currentRequestUri.substring(0, currentRequestUri.indexOf("?"));
 		map.add("redirect_uri", redirectUri);
 
@@ -57,7 +66,7 @@ public class DiscordHttpClient {
 	public DiscordUserInfo getCurrentUserInfo(DiscordAccessToken accessToken) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Authorization", "Bearer " + accessToken.getAccess_token());
-		HttpEntity<?> entity = new HttpEntity<>(headers);;
+		HttpEntity<?> entity = new HttpEntity<>(headers);
 
 		ResponseEntity<DiscordUserInfo> response = restTemplate.exchange(getCurrentUserUrl, HttpMethod.GET, entity, DiscordUserInfo.class);
 		if (response.getStatusCode().is2xxSuccessful()) {

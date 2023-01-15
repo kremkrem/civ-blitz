@@ -11,4 +11,8 @@ spring:
   flyway:
     schemas: imperium
     default-schema: imperium
+  cloud:
+    gcp:
+      secretmanager:
+        enabled: false
 

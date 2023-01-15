@@ -1,0 +1,25 @@
+multiplayer-flag: true
+
+spring:
+  datasource:
+    url: jdbc:postgresql://34.23.192.72:2345/postgres
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: SET_BY_ENV_VARIABLE
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  cloud:
+    gcp:
+      secretmanager:
+        enabled: false
+
+  security:
+    oauth2:
+      client:
+        registration:
+          discord:
+            client-secret: SET_BY_ENV_VARIABLE
+
+google:
+  api:
+    key: SET_BY_ENV_VARIABLE

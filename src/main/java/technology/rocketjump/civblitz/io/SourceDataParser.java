@@ -18,9 +18,6 @@ import java.io.IOException;
 @Component
 public class SourceDataParser {
 
-	@Value("${multiplayer-flag}")
-	private boolean multiplayerFlag;
-
 	@Autowired
 	public SourceDataParser(LeaderTraitsParser leaderTraitsParser, CivTraitsParser civTraitsParser,
 							SubtypesParser subtypesParser, SourceDataRepo sourceDataRepo, IconParser iconParser,
@@ -40,7 +37,8 @@ public class SourceDataParser {
 							@Qualifier("CivilizationLeaders") String civLeadersCsvContent,
 							@Qualifier("CivilizationDLC") String civDlcContent,
 							@Qualifier("LeaderDLC") String leaderDlcContent,
-							@Qualifier("TraitModifiers") String traitModifiersContent) throws IOException {
+							@Qualifier("TraitModifiers") String traitModifiersContent,
+							@Value("#{new Boolean('${multiplayer-flag}')}") boolean multiplayerFlag) throws IOException {
 		leaderTraitsParser.parse(leaderTraitsContent);
 		civTraitsParser.parse(civTraitsContent);
 		subtypesParser.parse(subtypesContent);

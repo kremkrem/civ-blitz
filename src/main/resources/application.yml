@@ -1,13 +1,13 @@
-multiplayer-flag: false
+multiplayer-flag: true
 
 spring:
   datasource:
-    url: jdbc:h2:file:./persistent_db/imperium_db;DATABASE_TO_UPPER=false;AUTO_SERVER=TRUE
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    url: jdbc:postgresql://34.23.192.72:2345/postgres
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: ${sm://db-password}
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
   flyway:
     schemas: imperium
     default-schema: imperium
@@ -20,14 +20,15 @@ spring:
       client:
         registration:
           discord:
-            client-id: 873320729351958539
-            client-secret: SET_BY_ENV_VARIABLE
+            client-id: 1057996542369345588
+            client-secret: ${sm://discord-client-secret}
             clientAuthenticationMethod: post
             authorizationGrantType: authorization_code
             scope:
               - identify
             redirectUri: "{baseUrl}/login/oauth2/code/discord"
             clientName: Imperium client
+            redirectOverrideScheme: SET_BY_ENV_VARIABLE
         provider:
           discord:
             authorizationUri: https://discordapp.com/api/oauth2/authorize
@@ -37,7 +38,7 @@ spring:
 
 google:
   api:
-    key: SET_BY_ENV_VARIABLE
+    key: ${sm://sheets-api-key}
 
 server:
   error:

@@ -23,6 +23,7 @@ const App = ({history}) => {
     const [loading, setLoading] = useState(true);
     const [loggedInPlayer, setLoggedInPlayer] = useState();
     const [multiplayerEnabled, setMultiplayerEnabled] = useState(false);
+    const [discordClientId, setDiscordClientId] = useState("");
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -50,6 +51,13 @@ const App = ({history}) => {
             .then((response) => {
                 if (!CardStore.initialised) {
                     CardStore.addCards(response.data);
+                    axios.get("/api/login/discord-client-id")
+                        .then((response) => {
+                            setDiscordClientId(response.data)
+                        })
+                        .catch((error) => {
+                            console.error('Error loading Discord client id', error)
+                        });
                     axios.get("/example/features")
                         .then((response) => {
                             setMultiplayerEnabled(response.data.multiplayer);
@@ -58,7 +66,6 @@ const App = ({history}) => {
                         .catch((error) => {
                             console.error('Error loading feature flags', error);
                         });
-
                 }
             })
             .catch((error) => {
@@ -78,7 +85,7 @@ const App = ({history}) => {
     }
     return (
         <div>
-            <TopLevelMenu loggedInPlayer={loggedInPlayer} multiplayerEnabled={multiplayerEnabled}/>
+            <TopLevelMenu loggedInPlayer={loggedInPlayer} multiplayerEnabled={multiplayerEnabled} discordClientId={discordClientId}/>
 
             <Switch>
                 <Route exact path="/">

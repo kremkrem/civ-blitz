@@ -2,6 +2,7 @@ package technology.rocketjump.civblitz.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,13 +25,20 @@ public class LoginController {
 	private final DiscordHttpClient discordHttpClient;
 	private final JwtService jwtService;
 	private final PlayerService playerService;
+	private final String discordClientId;
 
 	@Autowired
-	public LoginController(Environment environment, DiscordHttpClient discordHttpClient, JwtService jwtService, PlayerService playerService) {
+	public LoginController(
+			Environment environment,
+			DiscordHttpClient discordHttpClient,
+			JwtService jwtService,
+			PlayerService playerService,
+			@Value("${spring.security.oauth2.client.registration.discord.client-id}") String discordClientId) {
 		this.environment = environment;
 		this.discordHttpClient = discordHttpClient;
 		this.jwtService = jwtService;
 		this.playerService = playerService;
+		this.discordClientId = discordClientId;
 	}
 
 
@@ -50,9 +58,14 @@ public class LoginController {
 		String jwt = jwtService.create(token, player);
 
 		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.set("Location", "/?token="+jwt);
+		responseHeaders.set("Location", "/?token=" + jwt);
 
 		return ResponseEntity.status(HttpStatus.FOUND).headers(responseHeaders).build();
+	}
+
+	@GetMapping("/discord-client-id")
+	public ResponseEntity<String> discordClientId() {
+		return ResponseEntity.status(HttpStatus.OK).body("\"" + discordClientId + "\"");
 	}
 
 }

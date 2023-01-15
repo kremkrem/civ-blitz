@@ -29,7 +29,7 @@ public class ExampleController {
 	private final ModHeaderGenerator modHeaderGenerator;
 	private final MapSettingsGenerator mapSettingsGenerator;
 	private final ObjectiveDefinitionRepo objectiveDefinitionRepo;
-	@Value("${multiplayer-flag}")
+	@Value("#{new Boolean('${multiplayer-flag}')}")
 	private boolean multiplayerFlag;
 
 	@Autowired
