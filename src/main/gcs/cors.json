@@ -1,0 +1,8 @@
+[
+  {
+    "origin": ["https://logical-stacker-372116.ue.r.appspot.com"],
+    "method": ["GET", "OPTIONS"],
+    "responseHeader": ["Content-Type"],
+    "maxAgeSeconds": 3600
+  }
+]

@@ -397,6 +397,22 @@
                             </arguments>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>configure-cors-in-gcs</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>gsutil</executable>
+                            <arguments>
+                                <argument>cors</argument>
+                                <argument>set</argument>
+                                <argument>./src/main/gcs/cors.json</argument>
+                                <argument>gs://${google.storage.bucket}/</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
