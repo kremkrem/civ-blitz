@@ -16,3 +16,11 @@ spring:
       secretmanager:
         enabled: false
 
+  security:
+    oauth2:
+      client:
+        registration:
+          discord:
+            client-secret: SET_BY_ENV_VARIABLE
+            client-id: 1071564705786757200
+
