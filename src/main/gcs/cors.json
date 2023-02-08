@@ -1,6 +1,6 @@
 [
   {
-    "origin": ["https://logical-stacker-372116.ue.r.appspot.com"],
+    "origin": ["https://logical-stacker-372116.ue.r.appspot.com", "https://civ6blitz.app", "https://www.civ6blitz.app/"],
     "method": ["GET", "OPTIONS"],
     "responseHeader": ["Content-Type"],
     "maxAgeSeconds": 3600
