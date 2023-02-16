@@ -1,6 +1,7 @@
 package technology.rocketjump.civblitz.modgenerator.sql;
 
 import org.springframework.stereotype.Component;
+import org.stringtemplate.v4.ST;
 import technology.rocketjump.civblitz.model.Card;
 import technology.rocketjump.civblitz.model.CardCategory;
 import technology.rocketjump.civblitz.modgenerator.ModHeaderGenerator;
@@ -16,12 +17,14 @@ public class CivTraitsSqlGenerator extends BlitzFileGenerator {
 
 	@Override
 	public String getFileContents(ModHeader modHeader, ModdedCivInfo civInfo) {
-		String modName = ModHeaderGenerator.buildName(civInfo.selectedCards).toUpperCase();
-		StringBuilder sqlBuilder = new StringBuilder();
+		final String modName = ModHeaderGenerator.buildName(civInfo.selectedCards).toUpperCase();
+		// For attaching extra modifiers, beyond the regular civ trait.
+		final String uniqueCivTraitName = "TRAIT_CIVILIZATION_" + modName;
+		final StringBuilder sqlBuilder = new StringBuilder();
 
 		for (CardCategory cardCategory : CardCategory.mainCategories) {
 			if (!cardCategory.equals(CardCategory.LeaderAbility)) {
-				Card card = civInfo.getCard(cardCategory);
+				final Card card = civInfo.getCard(cardCategory);
 				addCivTraitLine(sqlBuilder, card.getTraitType(), modName);
 				if (card.getGrantsTraitType().isPresent()) {
 					addCivTraitLine(sqlBuilder, card.getGrantsTraitType().get(), modName);
@@ -35,12 +38,15 @@ public class CivTraitsSqlGenerator extends BlitzFileGenerator {
 			}
 		}
 
-		Card civAbilityCard = civInfo.getCard(CivilizationAbility);
+		final Card civAbilityCard = civInfo.getCard(CivilizationAbility);
 		if (civAbilityCard.getTraitType().equals("TRAIT_CIVILIZATION_MAYAB")) {
 			sqlBuilder.append("INSERT OR REPLACE INTO RequirementArguments (RequirementId, Name, Type, Value) VALUES (")
 					.append("'PLAYER_IS_MAYA', 'CivilizationType', 'ARGTYPE_IDENTITY', '").append(modName).append("');\n");
 		}
 
+		if(civInfo.selectedCards.stream().anyMatch(card -> card.getCardCategory().equals(Power))) {
+			registerNewCivTrait(sqlBuilder, uniqueCivTraitName, modName);
+		}
 		civInfo.selectedCards.stream()
 				.filter(card -> card.getCardCategory().equals(Power))
 				.forEach(powerCard -> {
@@ -48,9 +54,9 @@ public class CivTraitsSqlGenerator extends BlitzFileGenerator {
 					if (powerCard.getGrantsTraitType().isPresent()) {
 						addCivTraitLine(sqlBuilder, powerCard.getGrantsTraitType().get(), modName);
 					}
-					powerCard.getModifierIds().forEach(modifierId -> {
-						addTraitModifierLine(sqlBuilder, civAbilityCard.getTraitType(), modifierId);
-					});
+					powerCard.getModifierIds().forEach(modifierId ->
+							addTraitModifierLine(sqlBuilder, uniqueCivTraitName, modifierId)
+					);
 				});
 
 		return sqlBuilder.toString();
@@ -64,6 +70,15 @@ public class CivTraitsSqlGenerator extends BlitzFileGenerator {
 	private void addCivTraitLine(StringBuilder sqlBuilder, String traitType, String modName) {
 		sqlBuilder.append("INSERT OR REPLACE INTO CivilizationTraits (TraitType, CivilizationType) VALUES ('")
 				.append(traitType).append("', 'CIVILIZATION_IMP_").append(modName).append("');\n");
+	}
+
+	private void registerNewCivTrait(StringBuilder sqlBuilder, String civTraitType, String modName) {
+		sqlBuilder.append(ST.format("""
+				-- Unique ability for attaching extra modifiers.
+				INSERT OR REPLACE INTO Types (Type, Kind) VALUES ('<%1>', 'KIND_TRAIT');
+				INSERT OR REPLACE INTO Traits (TraitType, InternalOnly) VALUES ('<%1>', 1);
+				INSERT OR REPLACE INTO CivilizationTraits (TraitType, CivilizationType) VALUES ('<%1>', '<%2>');
+				""", civTraitType, "CIVILIZATION_IMP_" + modName));
 	}
 
 	@Override
