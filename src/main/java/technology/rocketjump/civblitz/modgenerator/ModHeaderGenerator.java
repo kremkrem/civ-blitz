@@ -7,6 +7,7 @@ import technology.rocketjump.civblitz.model.CardCategory;
 import technology.rocketjump.civblitz.model.CardRarity;
 import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
 
+import java.text.Normalizer;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -29,17 +30,16 @@ public class ModHeaderGenerator {
 	public ModHeader createFor(List<Card> selectedCards) {
 		String name = buildName(selectedCards);
 
-		StringBuilder descriptionBuilder = new StringBuilder();
-		descriptionBuilder.append("This mod consists of a new civ using the ");
-		descriptionBuilder.append(find(selectedCards, CivilizationAbility).getCivilizationFriendlyName()).append(" civ ability, ");
-		descriptionBuilder.append(find(selectedCards, LeaderAbility).getBaseCardName()).append(" as the leader, the ");
-		descriptionBuilder.append(find(selectedCards, UniqueInfrastructure).getBaseCardName()).append(" unique infrastructure (from ")
-				.append(find(selectedCards, UniqueInfrastructure).getCivilizationFriendlyName()).append("), and the ");
-		descriptionBuilder.append(find(selectedCards, UniqueUnit).getBaseCardName()).append(" unique unit (from ")
-				.append(find(selectedCards, UniqueUnit).getCivilizationFriendlyName()).append(").");
+		String descriptionBuilder = "This mod consists of a new civ using the " +
+				find(selectedCards, CivilizationAbility).getCivilizationFriendlyName() + " civ ability, " +
+				find(selectedCards, LeaderAbility).getBaseCardName() + " as the leader, the " +
+				find(selectedCards, UniqueInfrastructure).getBaseCardName() + " unique infrastructure (from " +
+				find(selectedCards, UniqueInfrastructure).getCivilizationFriendlyName() + "), and the " +
+				find(selectedCards, UniqueUnit).getBaseCardName() + " unique unit (from " +
+				find(selectedCards, UniqueUnit).getCivilizationFriendlyName() + ").";
 
 
-		return new ModHeader(name, descriptionBuilder.toString(), UUID.nameUUIDFromBytes(name.getBytes()));
+		return new ModHeader(name, descriptionBuilder, UUID.nameUUIDFromBytes(name.getBytes()));
 	}
 
 	public static String buildName(List<Card> selectedCards) {
@@ -51,7 +51,7 @@ public class ModHeaderGenerator {
 				nameBuilder.append(card.getRarity().name().charAt(0));
 			}
 			if (card.getCardCategory().equals(LeaderAbility)) {
-				nameBuilder.append(getShortName(card.getCivilizationFriendlyName()));
+				nameBuilder.append(getShortLeaderName(card.getBaseCardName()));
 			} else {
 				nameBuilder.append(getShortName(card.getBaseCardName()));
 			}
@@ -72,6 +72,12 @@ public class ModHeaderGenerator {
 		}
 
 		return shortNameBuilder.toString();
+	}
+
+	private static String getShortLeaderName(String name) {
+		// Get rid of all diacritics. I'm looking at you, Joao.
+		String normalized_name = Normalizer.normalize(name, Normalizer.Form.NFKD).replaceAll("[^\\p{ASCII}]", "");
+		return normalized_name.substring(0, 3) + normalized_name.substring(normalized_name.length() - 1);
 	}
 
 	private static boolean isLetter(char c) {
