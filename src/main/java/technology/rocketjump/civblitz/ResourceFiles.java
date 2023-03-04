@@ -168,4 +168,16 @@ public class ResourceFiles {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Value("classpath:csv/CardPatches.csv")
+	private Resource cardPatchesFile;
+
+	@Bean(name = "CardPatches")
+	public String CardPatches() {
+		try (InputStream is = cardPatchesFile.getInputStream()) {
+			return StreamUtils.copyToString(is, StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
