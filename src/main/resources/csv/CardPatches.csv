@@ -1,2 +1,3 @@
 TraitType,SqlFile,NeedsDedicatedAbility
 TRAIT_CIVILIZATION_MAYAB,fix_trait_civilization_mayab.sql,false
+TRAIT_LEADER_LINCOLN,fix_trait_leader_lincoln.sql,false

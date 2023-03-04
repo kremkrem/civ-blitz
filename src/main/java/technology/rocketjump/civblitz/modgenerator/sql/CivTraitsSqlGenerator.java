@@ -73,12 +73,14 @@ public class CivTraitsSqlGenerator extends BlitzFileGenerator {
 		sqlBuilder.append("INSERT OR REPLACE INTO CivilizationTraits (TraitType, CivilizationType) VALUES ('")
 				.append(traitType).append("', 'CIVILIZATION_IMP_").append(modName).append("');\n");
 		if (patch != null) {
-			sqlBuilder.append("--------------------------------------------------------------------------------\n-- ")
+			sqlBuilder.append(
+					"--------------------------------------------------------------------------------------------------------------------------\n-- ")
 					.append(traitType).append(" fix.\n");
 			ST template = new ST(patch.getSqlTemplate());
 			template.add("modName", modName);
 			sqlBuilder.append(template.render());
-			sqlBuilder.append("\n--------------------------------------------------------------------------------\n");
+			sqlBuilder.append(
+					"\n--------------------------------------------------------------------------------------------------------------------------\n");
 		}
 	}
 
