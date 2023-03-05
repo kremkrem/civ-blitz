@@ -15,7 +15,6 @@ import org.springframework.web.client.RestTemplate;
 import technology.rocketjump.civblitz.model.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static technology.rocketjump.civblitz.matches.objectives.ObjectiveDefinitionParser.toIdentifier;
 import static technology.rocketjump.civblitz.model.CardRarity.Common;
@@ -23,7 +22,7 @@ import static technology.rocketjump.civblitz.model.CardRarity.Common;
 @Component
 public class ModifierCardsParser {
 
-	private Logger logger = LoggerFactory.getLogger(ModifierCardsParser.class);
+	private final Logger logger = LoggerFactory.getLogger(ModifierCardsParser.class);
 
 	private final String googleApiKey;
 	private final SourceDataRepo sourceDataRepo;
@@ -64,9 +63,7 @@ public class ModifierCardsParser {
 					continue;
 				}
 
-				parse(row).ifPresent(card -> {
-					sourceDataRepo.add(card);
-				});
+				parse(row).ifPresent(sourceDataRepo::add);
 			}
 		} else {
 			throw new RuntimeException("Could not load modified cards from google sheet, " + response.getBody());
@@ -131,10 +128,11 @@ public class ModifierCardsParser {
 		powerCard.setCivilizationFriendlyName(civAbilityCard.getCivilizationFriendlyName());
 		powerCard.setMediaName(civAbilityCard.getMediaName());
 		powerCard.setRequiredDlc(civAbilityCard.getRequiredDlc());
+		powerCard.setPatchSQL(civAbilityCard.getPatchSQL());
 		if (!addsTraitType.isEmpty()) {
 			powerCard.setGrantsTraitType(Optional.of(addsTraitType));
 		}
-		powerCard.getModifierIds().addAll(modifierIds.stream().filter(m -> m.length() > 0).collect(Collectors.toList()));
+		powerCard.getModifierIds().addAll(modifierIds.stream().filter(m -> m.length() > 0).toList());
 
 		return Optional.of(powerCard);
 	}
