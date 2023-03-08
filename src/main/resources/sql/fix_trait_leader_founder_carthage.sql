@@ -1,6 +1,8 @@
 -- Add a new requirement ("leader has to have Dido's passive") to PROJECT_COTHON_MOVE_CAPITAL.
--- Otherwise, Cothon grants the project but completing it yields no results unless leader is Dido.
-UPDATE Projects SET UnlocksFromEffect = 1
+-- Then, loosen the requirements from DISTRICT_COTHON to DISTRICT_HARBOR.
+UPDATE Projects SET
+    UnlocksFromEffect = 1,
+    PrereqDistrict = 'DISTRICT_HARBOR'
 WHERE ProjectType = 'PROJECT_COTHON_CAPITAL_MOVE';
 INSERT OR REPLACE INTO Types (Type, Kind)
 VALUES ('MODIFIER_PLAYER_ALLOW_COTHON_PROJECT_DIDO', 'KIND_MODIFIER');
