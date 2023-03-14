@@ -58,7 +58,7 @@ const App = ({history}) => {
                         .catch((error) => {
                             console.error('Error loading Discord client id', error)
                         });
-                    axios.get("/example/features")
+                    axios.get("/api/features")
                         .then((response) => {
                             setMultiplayerEnabled(response.data.multiplayer);
                             setLoading(false);
