@@ -31,7 +31,13 @@ public class PlayersParser {
 				String civType = record.get("CivilizationType");
 				String leaderType = record.get("LeaderType");
 				String portrait = record.get("Portrait");
+				if (portrait.isBlank()) {
+					portrait = leaderType + "_NEUTRAL";
+				}
 				String portraitBackground = record.get("PortraitBackground");
+				if (portraitBackground.isBlank()) {
+					portraitBackground = leaderType + "_BACKGROUND";
+				}
 
 				sourceDataRepo.leaderNameByLeaderType.put(leaderType, record.get("LeaderName"));
 				sourceDataRepo.leaderIconByLeaderType.put(leaderType, record.get("LeaderIcon"));
