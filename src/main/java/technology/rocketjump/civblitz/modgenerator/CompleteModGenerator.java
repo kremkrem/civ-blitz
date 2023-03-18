@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 import technology.rocketjump.civblitz.infrastructurefix.InfrastructureFixFileProvider;
 import technology.rocketjump.civblitz.infrastructurefix.StaticModFile;
 import technology.rocketjump.civblitz.model.CardCategory;
+import technology.rocketjump.civblitz.modgenerator.artdef.LeaderFallbacksArtDefGenerator;
+import technology.rocketjump.civblitz.modgenerator.artdef.LeadersArtDefGenerator;
+import technology.rocketjump.civblitz.modgenerator.dep.ArtDepGenerator;
 import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
 import technology.rocketjump.civblitz.modgenerator.model.ModdedCivInfo;
 import technology.rocketjump.civblitz.modgenerator.sql.*;
@@ -22,35 +25,20 @@ import java.util.zip.ZipOutputStream;
 public class CompleteModGenerator {
 
 	private final ModHeaderGenerator modHeaderGenerator;
-	private final ModInfoGenerator modInfoGenerator;
-	private final CivilizationSqlGenerator civilizationSqlGenerator;
-	private final CivTraitsSqlGenerator civTraitsSqlGenerator;
-	private final ColorsSqlGenerator colorsSqlGenerator;
-	private final ConfigurationSqlGenerator configurationSqlGenerator;
-	private final GeographySqlGenerator geographySqlGenerator;
-	private final IconsSqlGenerator iconsSqlGenerator;
-	private final LeaderSqlGenerator leaderSqlGenerator;
-	private final LeaderTextSqlGenerator leaderTextSqlGenerator;
 	private final InfrastructureFixFileProvider infrastructureFixFileProvider;
 
-	private List<BlitzFileGenerator> fileGeneratorList = new ArrayList<>();
+	private final List<BlitzFileGenerator> fileGeneratorList = new ArrayList<>();
 
 	@Autowired
 	public CompleteModGenerator(ModHeaderGenerator modHeaderGenerator, ModInfoGenerator modInfoGenerator,
 								CivilizationSqlGenerator civilizationSqlGenerator, CivTraitsSqlGenerator civTraitsSqlGenerator,
 								ColorsSqlGenerator colorsSqlGenerator, ConfigurationSqlGenerator configurationSqlGenerator,
 								GeographySqlGenerator geographySqlGenerator, IconsSqlGenerator iconsSqlGenerator,
-								LeaderSqlGenerator leaderSqlGenerator, LeaderTextSqlGenerator leaderTextSqlGenerator, InfrastructureFixFileProvider infrastructureFixFileProvider) {
+								LeaderSqlGenerator leaderSqlGenerator, LeaderTextSqlGenerator leaderTextSqlGenerator,
+								ArtDepGenerator artDepGenerator, LeadersArtDefGenerator leadersArtDefGenerator,
+								LeaderFallbacksArtDefGenerator leaderFallbacksArtDefGenerator,
+								InfrastructureFixFileProvider infrastructureFixFileProvider) {
 		this.modHeaderGenerator = modHeaderGenerator;
-		this.modInfoGenerator = modInfoGenerator;
-		this.civilizationSqlGenerator = civilizationSqlGenerator;
-		this.civTraitsSqlGenerator = civTraitsSqlGenerator;
-		this.colorsSqlGenerator = colorsSqlGenerator;
-		this.configurationSqlGenerator = configurationSqlGenerator;
-		this.geographySqlGenerator = geographySqlGenerator;
-		this.iconsSqlGenerator = iconsSqlGenerator;
-		this.leaderSqlGenerator = leaderSqlGenerator;
-		this.leaderTextSqlGenerator = leaderTextSqlGenerator;
 		this.infrastructureFixFileProvider = infrastructureFixFileProvider;
 
 		fileGeneratorList.add(civilizationSqlGenerator);
@@ -62,6 +50,9 @@ public class CompleteModGenerator {
 		fileGeneratorList.add(modInfoGenerator);
 		fileGeneratorList.add(leaderSqlGenerator);
 		fileGeneratorList.add(leaderTextSqlGenerator);
+		fileGeneratorList.add(artDepGenerator);
+		fileGeneratorList.add(leadersArtDefGenerator);
+		fileGeneratorList.add(leaderFallbacksArtDefGenerator);
 	}
 
 	public byte[] generateMod(String matchName, List<ModdedCivInfo> moddedCivs) throws IOException {

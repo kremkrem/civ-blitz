@@ -1,4 +1,4 @@
-package technology.rocketjump.civblitz.modgenerator.sql;
+package technology.rocketjump.civblitz.modgenerator;
 
 import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
 import technology.rocketjump.civblitz.modgenerator.model.ModdedCivInfo;

@@ -5,6 +5,7 @@ import org.stringtemplate.v4.ST;
 import technology.rocketjump.civblitz.model.Card;
 import technology.rocketjump.civblitz.model.CardCategory;
 import technology.rocketjump.civblitz.model.Patch;
+import technology.rocketjump.civblitz.modgenerator.BlitzFileGenerator;
 import technology.rocketjump.civblitz.modgenerator.ModHeaderGenerator;
 import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
 import technology.rocketjump.civblitz.modgenerator.model.ModdedCivInfo;

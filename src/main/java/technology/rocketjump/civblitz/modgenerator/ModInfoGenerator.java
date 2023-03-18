@@ -3,7 +3,6 @@ package technology.rocketjump.civblitz.modgenerator;
 import org.springframework.stereotype.Component;
 import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
 import technology.rocketjump.civblitz.modgenerator.model.ModdedCivInfo;
-import technology.rocketjump.civblitz.modgenerator.sql.BlitzFileGenerator;
 
 import java.time.Instant;
 import java.util.List;

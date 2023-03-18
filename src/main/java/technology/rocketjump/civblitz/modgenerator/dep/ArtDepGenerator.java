@@ -1,0 +1,75 @@
+package technology.rocketjump.civblitz.modgenerator.dep;
+
+import org.springframework.stereotype.Component;
+import org.stringtemplate.v4.ST;
+import technology.rocketjump.civblitz.modgenerator.BlitzFileGenerator;
+import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
+import technology.rocketjump.civblitz.modgenerator.model.ModdedCivInfo;
+
+import java.util.UUID;
+
+@Component
+public class ArtDepGenerator extends BlitzFileGenerator {
+	@Override
+	public String getFileContents(ModHeader modHeader, ModdedCivInfo civInfo) {
+		// Using ModHeader as an identifying header for this GameDependency.
+		String depName = modHeader.modName + "_Art";
+		ModHeader fileHeader = new ModHeader(depName, "", UUID.nameUUIDFromBytes(depName.getBytes()));
+		return new ST("""
+				<?xml version="1.0" encoding="UTF-8"?>
+				<AssetObjects..GameDependencyData>
+				  <ID>
+				    <name text="CivBlitz$modName$"/>
+				    <id text="$UUID$"/>
+				  </ID>
+				  <RequiredGameArtIDs/>
+				  <SystemDependencies>
+				    <Element>
+				      <ConsumerName text="Audio"/>
+				      <ArtDefDependencyPaths>
+				        <Element text="Leaders.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies/>
+				      <LoadsLibraries>true</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="Leaders"/>
+				      <ArtDefDependencyPaths>
+				        <Element text="Leaders.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies>
+				        <Element text="Leader"/>
+				      </LibraryDependencies>
+				      <LoadsLibraries>true</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="LeaderFallback"/>
+				      <ArtDefDependencyPaths>
+				        <Element text="FallbackLeaders.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies>
+				        <Element text="LeaderFallback"/>
+				      </LibraryDependencies>
+				      <LoadsLibraries>true</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="LeaderLighting"/>
+				      <ArtDefDependencyPaths/>
+				      <LibraryDependencies>
+				        <Element text="LeaderLighting"/>
+				      </LibraryDependencies>
+				      <LoadsLibraries>true</LoadsLibraries>
+				    </Element>
+				  </SystemDependencies>
+				</AssetObjects..GameDependencyData>
+				""", '$', '$')
+				.add("modName", fileHeader.modName)
+				.add("UUID", fileHeader.id.toString())
+				.render();
+	}
+
+	@Override
+	public String getFilename() {
+		return "Art.dep";
+	}
+}

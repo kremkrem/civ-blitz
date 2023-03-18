@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import technology.rocketjump.civblitz.model.Card;
 import technology.rocketjump.civblitz.model.SourceDataRepo;
+import technology.rocketjump.civblitz.modgenerator.BlitzFileGenerator;
 import technology.rocketjump.civblitz.modgenerator.ModHeaderGenerator;
 import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
 import technology.rocketjump.civblitz.modgenerator.model.ModdedCivInfo;
