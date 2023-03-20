@@ -1,0 +1,48 @@
+runtime: java17
+instance_class: F2
+
+handlers:
+
+- url: /
+  secure: always
+  static_files: frontend/build/index.html
+  upload: frontend/build/index.html
+
+- url: /(asset-manifest\.json|favicon\.ico|index\.html|manifest\.json|robots\.txt)
+  secure: always
+  static_files: frontend/build/\1
+  upload: frontend/build/.*\.(json|ico|html|txt)
+
+- url: /images
+  secure: always
+  static_dir: frontend/build/images
+
+# This shouldn't be needed - it's outsourced to Cloud Storage
+- url: /media
+  secure: always
+  static_dir: frontend/build/media
+
+# This shouldn't be needed - it's outsourced to Cloud Storage
+- url: /static
+  secure: always
+  static_dir: frontend/build/static
+
+- url: /api/.*
+  secure: always
+  script: auto
+
+- url: /.*
+  secure: optional
+  static_files: frontend/build/robots.txt
+  upload: frontend/build/robots.txt
+
+
+automatic_scaling:
+  min_instances: 0
+  max_instances: 2
+  target_cpu_utilization: 0.7
+  target_throughput_utilization: 0.6
+  max_concurrent_requests: 100
+
+env_variables:
+  SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_DISCORD_REDIRECTSCHEMEOVERRIDE: "https"

@@ -162,10 +162,11 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
+                            <skip>true</skip>
                             <outputDirectory>${basedir}/target/classes/static</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>frontend/build</directory>
+                                    <directory>frontend/build/images</directory>
                                 </resource>
                             </resources>
                         </configuration>
@@ -289,7 +290,8 @@
                                             <enumConverter>true</enumConverter>
                                         </forcedType>
                                         <forcedType>
-                                            <userType>technology.rocketjump.civblitz.mapgen.TemperatureSetting</userType>
+                                            <userType>technology.rocketjump.civblitz.mapgen.TemperatureSetting
+                                            </userType>
                                             <includeExpression>temperature</includeExpression>
                                             <enumConverter>true</enumConverter>
                                         </forcedType>
@@ -364,8 +366,9 @@
                 <artifactId>appengine-maven-plugin</artifactId>
                 <version>2.4.4</version>
                 <configuration>
-                    <version>2</version>
+                    <version>3</version>
                     <projectId>GCLOUD_CONFIG</projectId>
+                    <appEngineDirectory>.</appEngineDirectory>
                 </configuration>
                 <executions>
                     <execution>
@@ -392,7 +395,7 @@
                                 <argument>-m</argument>
                                 <argument>rsync</argument>
                                 <argument>-r</argument>
-                                <argument>./target/classes/static</argument>
+                                <argument>./frontend/build</argument>
                                 <argument>gs://${google.storage.bucket}/</argument>
                             </arguments>
                         </configuration>
