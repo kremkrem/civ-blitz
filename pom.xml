@@ -25,13 +25,6 @@
             EXISTS "imperium"
         </h2.db.url>
         <h2.db.username>sa</h2.db.username>
-
-        <db.name>imperium</db.name>
-        <db.host>localhost</db.host>
-        <db.port>5432</db.port>
-        <db.username>postgres</db.username>
-        <db.password>Ok03TkcHjY96</db.password>
-        <db.url>jdbc:postgresql://${db.host}:${db.port}:${db.name}</db.url>
         <jooq.generated.source.directory>${project.build.directory}/generated-sources/jooq
         </jooq.generated.source.directory>
         <google.storage.bucket>civ-blitz</google.storage.bucket>
@@ -148,7 +141,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <!--<skip>true</skip>-->
+                            <skip>true</skip>
                             <outputDirectory>${basedir}/target/classes/static</outputDirectory>
                             <resources>
                                 <resource>
