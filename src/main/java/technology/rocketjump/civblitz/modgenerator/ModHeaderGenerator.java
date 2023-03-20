@@ -1,6 +1,6 @@
 package technology.rocketjump.civblitz.modgenerator;
 
-import org.h2.util.StringUtils;
+import org.jooq.tools.StringUtils;
 import org.springframework.stereotype.Component;
 import technology.rocketjump.civblitz.model.Card;
 import technology.rocketjump.civblitz.model.CardCategory;
@@ -22,8 +22,8 @@ public class ModHeaderGenerator {
 
 		String description = "This mod consists of a selection of new civs to support the Civ Blitz match " + matchName;
 
-		String modName = StringUtils.replaceAll(matchName, " ", "_");
-		modName = StringUtils.replaceAll(modName, "/", "_");
+		String modName = StringUtils.replace(matchName, " ", "_");
+		modName = StringUtils.replace(modName, "/", "_");
 		return new ModHeader(modName, description, UUID.nameUUIDFromBytes(modName.getBytes()));
 	}
 
@@ -44,7 +44,8 @@ public class ModHeaderGenerator {
 
 	public static String buildName(List<Card> selectedCards) {
 		StringBuilder nameBuilder = new StringBuilder();
-		selectedCards = selectedCards.stream().filter(c -> mainCategories.contains(c.getCardCategory())).collect(Collectors.toList());
+		selectedCards = selectedCards.stream().filter(c -> mainCategories.contains(c.getCardCategory()))
+				.collect(Collectors.toList());
 		selectedCards.sort(Comparator.comparing(Card::getCardCategory));
 		for (Card card : selectedCards) {
 			if (!card.getRarity().equals(CardRarity.Common)) {
