@@ -33,6 +33,7 @@ public class SourceDataRepo {
 
 	public final Map<String, CSVRecord> civilizationCsvRecordsByCivType = new HashMap<>();
 	public final Map<String, Card> civAbilityCardByFriendlyName = new HashMap<>();
+	public final Map<String, LeaderArtData> leaderArtDataByLeaderType = new HashMap<>();
 
 	@Autowired
 	public SourceDataRepo() {

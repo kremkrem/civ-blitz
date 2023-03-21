@@ -33,7 +33,7 @@ public class ModInfoGenerator extends BlitzFileGenerator {
 				"    <Created>" + Instant.now().getEpochSecond() + "</Created>\n" +
 				"    <Teaser>" + modHeader.modDescription + "</Teaser>\n" +
 				"""
-				     <Authors>Zsinj</Authors>
+				     <Authors>Zsinj, SztoDwa</Authors>
 				     <CompatibleVersions>2.0</CompatibleVersions>
 				  </Properties>
 				  <Dependencies>
@@ -97,6 +97,7 @@ public class ModInfoGenerator extends BlitzFileGenerator {
 					  <Properties>
 						<LoadOrder>9000</LoadOrder>
 					  </Properties>
+					  <File>Art.dep</File>
 					  <File>DLC_Indones_Khmer.dep</File>
 					  <File>DLC_Maced_Pers.dep</File>
 					  <File>DLC_Nubia_Amanit.dep</File>
@@ -104,6 +105,7 @@ public class ModInfoGenerator extends BlitzFileGenerator {
 					</UpdateArt>
 				  </InGameActions>
 				  <Files>
+				  	<File>Art.dep</File>
 					<File>Civilization.sql</File>
 					<File>CivTraits.sql</File>
 					<File>Colors.sql</File>
@@ -116,6 +118,8 @@ public class ModInfoGenerator extends BlitzFileGenerator {
 					<File>ArtDefs/Landmarks_DLC_Maced_Pers.artdef</File>
 					<File>ArtDefs/Landmarks_DLC_Nubia_Amanit.artdef</File>
 					<File>ArtDefs/Landmarks_Exp1.artdef</File>
+					<File>ArtDefs/LeaderFallbacks.artdef</File>
+					<File>ArtDefs/Leaders.artdef</File>
 					<File>DLC_Indones_Khmer.dep</File>
 					<File>DLC_Maced_Pers.dep</File>
 					<File>DLC_Nubia_Amanit.dep</File>

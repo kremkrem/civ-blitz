@@ -6,6 +6,7 @@ import technology.rocketjump.civblitz.modgenerator.BlitzFileGenerator;
 import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
 import technology.rocketjump.civblitz.modgenerator.model.ModdedCivInfo;
 
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -13,7 +14,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 	@Override
 	public String getFileContents(ModHeader modHeader, ModdedCivInfo civInfo) {
 		// Using ModHeader as an identifying header for this GameDependency.
-		String depName = modHeader.modName + "_Art";
+		String depName = modHeader.modName + "Art";
 		ModHeader fileHeader = new ModHeader(depName, "", UUID.nameUUIDFromBytes(depName.getBytes()));
 		return new ST("""
 				<?xml version="1.0" encoding="UTF-8"?>
@@ -71,5 +72,10 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 	@Override
 	public String getFilename() {
 		return "Art.dep";
+	}
+
+	@Override
+	public String getFileContents(ModHeader modHeader, List<ModdedCivInfo> civs) {
+		return getFileContents(modHeader, (ModdedCivInfo) null);
 	}
 }

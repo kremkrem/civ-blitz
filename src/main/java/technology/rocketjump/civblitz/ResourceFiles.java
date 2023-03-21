@@ -180,4 +180,16 @@ public class ResourceFiles {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Value("classpath:csv/LeaderArtDefs.csv")
+	private Resource leaderArtDefsFile;
+
+	@Bean(name = "LeaderArtDefs")
+	public String LeaderArtDefs() {
+		try (InputStream is = leaderArtDefsFile.getInputStream()) {
+			return StreamUtils.copyToString(is, StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
