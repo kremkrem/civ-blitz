@@ -128,11 +128,11 @@ public class LeaderSqlGenerator extends BlitzFileGenerator {
 				--==========================================================================================================================
 				-- LEADERS: LOADING INFO
 				--==========================================================================================================================
-				INSERT INTO LoadingInfo (LeaderType, BackgroundImage, ForegroundImage, PlayDawnOfManAudio)
-				SELECT 'LEADER_IMP_""").append(modName).append("""
-				', BackgroundImage, ForegroundImage, PlayDawnOfManAudio
-				FROM LoadingInfo
-				WHERE LeaderType = '""").append(leaderType).append("';");
+				INSERT INTO LoadingInfo (LeaderType, BackgroundImage, ForegroundImage, LeaderText)
+				VALUES ('LEADER_IMP_""").append(modName).append("', '")
+				.append(leaderType).append("_BACKGROUND', '")
+				.append(leaderType).append("_NEUTRAL', 'LOC_LOADING_INFO_")
+				.append(leaderType).append("');");
 
 		return sqlBuilder.toString();
 	}
