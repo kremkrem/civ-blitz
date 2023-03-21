@@ -192,4 +192,16 @@ public class ResourceFiles {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Value("classpath:csv/FallbackLeadersArtDefs.csv")
+	private Resource fallbackLeadersArtDefsFile;
+
+	@Bean(name = "FallbackLeaderArtDefs")
+	public String FallbackLeaderArtDefs() {
+		try (InputStream is = fallbackLeadersArtDefsFile.getInputStream()) {
+			return StreamUtils.copyToString(is, StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Component
 public class LeadersArtDefGenerator extends BlitzFileGenerator {
-	SourceDataRepo sourceDataRepo;
+	private final SourceDataRepo sourceDataRepo;
 
 	@Autowired
 	LeadersArtDefGenerator(SourceDataRepo sourceDataRepo) {

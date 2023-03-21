@@ -29,6 +29,7 @@ public class SourceDataParser {
 							ModifierCardsParser modifierCardsParser,
 							CardPatchParser cardPatchParser,
 							LeaderArtDefsParser leaderArtDefsParser,
+							FallbackLeadersArtDefsParser fallbackLeadersArtDefsParser,
 							@Qualifier("leaderTraits") String leaderTraitsContent,
 							@Qualifier("civTraits") String civTraitsContent,
 							@Qualifier("subtypes") String subtypesContent,
@@ -42,6 +43,7 @@ public class SourceDataParser {
 							@Qualifier("TraitModifiers") String traitModifiersContent,
 							@Qualifier("CardPatches") String cardPatchesContent,
 							@Qualifier("LeaderArtDefs") String leaderArtDefsContent,
+							@Qualifier("FallbackLeaderArtDefs") String fallbackLeaderArtDefsContent,
 							@Value("#{new Boolean('${multiplayer-flag}')}") boolean multiplayerFlag) throws IOException {
 		leaderTraitsParser.parse(leaderTraitsContent);
 		civTraitsParser.parse(civTraitsContent);
@@ -55,6 +57,7 @@ public class SourceDataParser {
 		modifiersParser.parse(traitModifiersContent);
 		cardPatchParser.parse(cardPatchesContent);
 		leaderArtDefsParser.parse(leaderArtDefsContent);
+		fallbackLeadersArtDefsParser.parse(fallbackLeaderArtDefsContent);
 
 		if (multiplayerFlag) {
 			objectiveDefinitionParser.readFromGoogleSheet();
