@@ -84,7 +84,7 @@ public class ModHeaderGenerator {
 
 	private static String getShortLeaderName(String name) {
 		// Get rid of all diacritics. I'm looking at you, Joao.
-		String normalized_name = Normalizer.normalize(name, Normalizer.Form.NFKD).replaceAll("[^\\p{ASCII}]", "");
+		String normalized_name = Normalizer.normalize(name, Normalizer.Form.NFKD).replaceAll("[^\\p{Alnum}]", "");
 		return normalized_name.substring(0, 3) + normalized_name.substring(normalized_name.length() - 1);
 	}
 
