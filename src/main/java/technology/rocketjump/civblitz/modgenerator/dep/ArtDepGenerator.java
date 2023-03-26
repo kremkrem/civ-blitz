@@ -15,7 +15,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 	public String getFileContents(ModHeader modHeader, ModdedCivInfo civInfo) {
 		// Using ModHeader as an identifying header for this GameDependency.
 		String depName = modHeader.modName + "Art";
-		ModHeader fileHeader = new ModHeader(depName, "", UUID.nameUUIDFromBytes(depName.getBytes()));
+		ModHeader fileHeader = new ModHeader(depName, "", UUID.nameUUIDFromBytes(depName.getBytes()), List.of());
 		return new ST("""
 				<?xml version="1.0" encoding="UTF-8"?>
 				<AssetObjects..GameDependencyData>

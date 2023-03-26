@@ -1,4 +1,5 @@
 import seedrandom from 'seedrandom';
+import CardInfo from "./cards/CardInfo";
 
 let clientId = localStorage.getItem('clientId');
 if (!clientId) {
@@ -14,7 +15,15 @@ const ImpRandom = {
     },
 
     cardSort: (a, b) => {
-        return a.cardCategory.localeCompare(b.cardCategory) || a.baseCardName.localeCompare(b.baseCardName);
+        let x = a.cardCategory
+        let y = b.cardCategory
+        if (!CardInfo.getAllCategories().includes(x)) {
+            x = "ZZZZ".concat(x)
+        }
+        if (!CardInfo.getAllCategories().includes(y)) {
+            y = "ZZZZ".concat(y)
+        }
+        return x.localeCompare(y) || a.baseCardName.localeCompare(b.baseCardName);
     }
 
 };

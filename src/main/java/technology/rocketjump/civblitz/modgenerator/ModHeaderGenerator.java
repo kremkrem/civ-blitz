@@ -6,11 +6,10 @@ import technology.rocketjump.civblitz.model.Card;
 import technology.rocketjump.civblitz.model.CardCategory;
 import technology.rocketjump.civblitz.model.CardRarity;
 import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
+import technology.rocketjump.civblitz.modgenerator.sql.actsofgod.ActOfGod;
 
 import java.text.Normalizer;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static technology.rocketjump.civblitz.model.CardCategory.*;
@@ -24,22 +23,30 @@ public class ModHeaderGenerator {
 
 		String modName = StringUtils.replace(matchName, " ", "_");
 		modName = StringUtils.replace(modName, "/", "_");
-		return new ModHeader(modName, description, UUID.nameUUIDFromBytes(modName.getBytes()));
+
+		return new ModHeader(modName, description, UUID.nameUUIDFromBytes(modName.getBytes()), List.of());
 	}
 
 	public ModHeader createFor(List<Card> selectedCards) {
 		String name = buildName(selectedCards);
 
-		String descriptionBuilder = "This mod consists of a new civ using the " +
+		StringBuilder descriptionBuilder = new StringBuilder("This mod consists of a new civ using the " +
 				find(selectedCards, CivilizationAbility).getCivilizationFriendlyName() + " civ ability, " +
 				find(selectedCards, LeaderAbility).getBaseCardName() + " as the leader, the " +
 				find(selectedCards, UniqueInfrastructure).getBaseCardName() + " unique infrastructure (from " +
 				find(selectedCards, UniqueInfrastructure).getCivilizationFriendlyName() + "), and the " +
 				find(selectedCards, UniqueUnit).getBaseCardName() + " unique unit (from " +
-				find(selectedCards, UniqueUnit).getCivilizationFriendlyName() + ").";
-
-
-		return new ModHeader(name, descriptionBuilder, UUID.nameUUIDFromBytes(name.getBytes()));
+				find(selectedCards, UniqueUnit).getCivilizationFriendlyName() + ").");
+		List<Card> actOfGodCards = selectedCards.stream().filter(c -> c.getCardCategory() == ActOfGod).toList();
+		if (!actOfGodCards.isEmpty()) {
+			descriptionBuilder.append("\nThe mod also applies the following global modifiers (aka \"Acts of God\"):");
+			for (Card c : actOfGodCards) {
+				descriptionBuilder.append("\n* ").append(c.getBaseCardName());
+			}
+		}
+		List<ActOfGod> actsOfGod =
+				actOfGodCards.stream().map(Card::getActOfGod).filter(Optional::isPresent).map(Optional::get).toList();
+		return new ModHeader(name, descriptionBuilder.toString(), UUID.nameUUIDFromBytes(name.getBytes()), actsOfGod);
 	}
 
 	public static String buildName(List<Card> selectedCards) {

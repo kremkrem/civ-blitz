@@ -7,9 +7,10 @@ import PropTypes from 'prop-types';
 
 const CivCard = ({cardJson, onClick, clickDisabled}) => {
 
+    const civMediaName = (cardJson.civilizationType == 'imperium') ? 'imperium' : CardStore.getMediaNameForCivType(cardJson.civilizationType);
     const footer = (
         <div>
-            <Image src={process.env.PUBLIC_URL + '/media/'+CardStore.getMediaNameForCivType(cardJson.civilizationType)+'.png'} width={30} />
+            <Image src={process.env.PUBLIC_URL + '/media/'+ civMediaName + '.png'} width={30} />
             &nbsp;
             {cardJson.civilizationFriendlyName}
          </div>);

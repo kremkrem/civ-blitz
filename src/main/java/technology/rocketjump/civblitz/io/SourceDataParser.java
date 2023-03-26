@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import technology.rocketjump.civblitz.cards.ActOfGodCardsParser;
 import technology.rocketjump.civblitz.cards.ModifierCardsParser;
 import technology.rocketjump.civblitz.matches.guilds.GuildDefinitionParser;
 import technology.rocketjump.civblitz.matches.objectives.ObjectiveDefinitionParser;
@@ -30,6 +31,7 @@ public class SourceDataParser {
 							CardPatchParser cardPatchParser,
 							LeaderArtDefsParser leaderArtDefsParser,
 							FallbackLeadersArtDefsParser fallbackLeadersArtDefsParser,
+							ActOfGodCardsParser actOfGodCardsParser,
 							@Qualifier("leaderTraits") String leaderTraitsContent,
 							@Qualifier("civTraits") String civTraitsContent,
 							@Qualifier("subtypes") String subtypesContent,
@@ -72,6 +74,7 @@ public class SourceDataParser {
 
 		if (multiplayerFlag) {
 			modifierCardsParser.readFromGoogleSheet();
+			actOfGodCardsParser.readFromGoogleSheet();
 		}
 
 		System.out.println("All cards parsed: " + sourceDataRepo.getAll().size());

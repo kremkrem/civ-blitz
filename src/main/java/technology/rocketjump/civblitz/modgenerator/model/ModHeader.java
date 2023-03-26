@@ -13,13 +13,11 @@ public class ModHeader {
 	public final UUID id;
 	public final List<ActOfGod> actsOfGod = new ArrayList<>();
 
-	public ModHeader(String modName, String modDescription, UUID id) {
+	public ModHeader(String modName, String modDescription, UUID id, List<ActOfGod> actsOfGod) {
 		this.modName = modName;
 		this.modDescription = modDescription;
 		this.id = id;
-
-//		actsOfGod.add(new Cowvalry());
-//		actsOfGod.add(new HypatiasBlessing());
+		this.actsOfGod.addAll(actsOfGod);
 	}
 
 }

@@ -1,5 +1,7 @@
 package technology.rocketjump.civblitz.model;
 
+import technology.rocketjump.civblitz.modgenerator.sql.actsofgod.ActOfGod;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +41,7 @@ public class Card {
 	protected String gameplaySQL;
 	protected String localisationSQL;
 	protected Patch patchSQL;
+	protected Optional<ActOfGod> actOfGod = Optional.empty();
 
 	public Card() {
 
@@ -66,6 +69,7 @@ public class Card {
 		this.gameplaySQL = original.gameplaySQL;
 		this.localisationSQL = original.localisationSQL;
 		this.patchSQL = original.patchSQL;
+		this.actOfGod = original.actOfGod;
 	}
 
 	@Override
@@ -252,5 +256,13 @@ public class Card {
 
 	public void setPatchSQL(Patch patchSQL) {
 		this.patchSQL = patchSQL;
+	}
+
+	public Optional<ActOfGod> getActOfGod() {
+		return actOfGod;
+	}
+
+	public void setActOfGod(Optional<ActOfGod> actOfGod) {
+		this.actOfGod = actOfGod;
 	}
 }
