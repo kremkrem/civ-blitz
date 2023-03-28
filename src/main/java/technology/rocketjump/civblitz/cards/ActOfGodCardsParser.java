@@ -37,7 +37,7 @@ public class ActOfGodCardsParser {
 
 	public void readFromGoogleSheet() throws JsonProcessingException {
 		String requestUrl = "https://sheets.googleapis.com/v4/spreadsheets/" +
-				"1PNS3od_8Kh3LrH48WLQveBhVQ7CvDSwmOlwErP1Q8SM/values/Inducements!A1:G300?key=" + googleApiKey;
+				"1PNS3od_8Kh3LrH48WLQveBhVQ7CvDSwmOlwErP1Q8SM/values/Inducements!A1:H300?key=" + googleApiKey;
 
 		ResponseEntity<String> response = restTemplate.getForEntity(requestUrl, String.class);
 		if (response.getStatusCode().is2xxSuccessful()) {
@@ -53,7 +53,7 @@ public class ActOfGodCardsParser {
 					columnIndicies.put(columnHeader, cursor);
 				}
 			}
-			RowToCardParser parser = new RowToCardParser(columnIndicies, logger);
+			RowToCardParser parser = new RowToCardParser(sourceDataRepo, columnIndicies, logger);
 
 			while (iterator.hasNext()) {
 				JsonNode row = iterator.next();
@@ -75,14 +75,17 @@ public class ActOfGodCardsParser {
 		Type,
 		Table,
 		StartEras,
+		BelongsTo,
 	}
 
 	private static class RowToCardParser {
 
+		private final SourceDataRepo sourceDataRepo;
 		private final ImmutableMap<ColumnHeader, Integer> columnIndicies;
 		private final Logger logger;
 		private final Map<String, ActOfGod> actMap = new ArrayMap<>();
-		public RowToCardParser(Map<ColumnHeader, Integer> columnIndicies, Logger logger) {
+		public RowToCardParser(SourceDataRepo sourceDataRepo, Map<ColumnHeader, Integer> columnIndicies, Logger logger) {
+			this.sourceDataRepo = sourceDataRepo;
 			this.columnIndicies = ImmutableMap.copyOf(columnIndicies);
 			this.logger = logger;
 			for (ActOfGod act : List.of(new AntiquesRoadshow(), new BeachHouse(), new BorderForce(), new ChoppingMall(),
@@ -125,8 +128,14 @@ public class ActOfGodCardsParser {
 			card.setBaseCardName(name);
 			card.setEnhancedCardName(name);
 			card.setEnhancedCardDescription(getColumn(row, ColumnHeader.Description));
-			card.setCivilizationFriendlyName("Civ Blitz Original");
-			card.setCivilizationType("imperium");
+			Card civAbilityCard = sourceDataRepo.civAbilityCardByFriendlyName.get(getColumn(row, ColumnHeader.BelongsTo));
+			if (civAbilityCard == null) {
+				card.setCivilizationFriendlyName("Civ Blitz Original");
+				card.setCivilizationType("imperium");
+			} else {
+				card.setCivilizationFriendlyName(civAbilityCard.getCivilizationFriendlyName());
+				card.setCivilizationType(civAbilityCard.getCivilizationType());
+			}
 			card.setRarity(rarity);
 			card.setMediaName("ActOfGod/" + identifier);
 			card.setActOfGod(Optional.of(act));

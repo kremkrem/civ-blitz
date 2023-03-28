@@ -5,7 +5,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/imperium
     driver-class-name: org.postgresql.Driver
     username: postgres
-    password: Ok03TkcHjY96
+    password: SET_BY_ENV_VARIABLE
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   flyway:
@@ -24,3 +24,6 @@ spring:
             client-secret: SET_BY_ENV_VARIABLE
             client-id: 1071564705786757200
 
+google:
+  api:
+    key: SET_BY_ENV_VARIABLE
