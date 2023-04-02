@@ -62,6 +62,7 @@ public class ModInfoGenerator extends BlitzFileGenerator {
 					<Mod id="7D27831B-BAA6-4A8B-A39C-94243BAD3F47" title="LOC_RULERS_OF_CHINA_MOD_TITLE"/>
 					<Mod id="82AE6F24-930F-4640-833C-FCDFD4845757" title="LOC_RULERS_OF_THE_SAHARA_MOD_TITLE"/>
 					<Mod id="249D9276-0832-48E4-B370-14531FA4E33C" title="LOC_GREAT_BUILDERS_MOD_TITLE"/>
+					<Mod id="258EF3CA-890B-4863-8A52-982822EFF7BD" title="LOC_RULERS_OF_ENGLAND_MOD_TITLE"/>
 				  </References>
 				  <FrontEndActions>
 					<UpdateDatabase id="Update_DB_Frontend">
