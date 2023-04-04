@@ -30,6 +30,7 @@ public class FallbackLeadersArtDefGenerator extends BlitzFileGenerator {
 	@Override
 	public String getFileContents(ModHeader modHeader, List<ModdedCivInfo> civs) {
 		StringBuilder builder = new StringBuilder("""
+				<?xml version="1.0" encoding="UTF-8" ?>
 				<AssetObjects..ArtDefSet>
 					<m_Version>
 						<major>4</major>
