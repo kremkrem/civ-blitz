@@ -131,6 +131,6 @@ public class ModInfoGenerator extends BlitzFileGenerator {
 
 	@Override
 	public String getFilename() {
-		return "CivBlitz"+modName+".modinfo";
+		return "CivBlitz" + ModgenStringUtils.NormalizeString(modName) + ".modinfo";
 	}
 }

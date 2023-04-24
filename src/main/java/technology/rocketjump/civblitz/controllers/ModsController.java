@@ -11,6 +11,7 @@ import technology.rocketjump.civblitz.model.MatchWithPlayers;
 import technology.rocketjump.civblitz.model.SourceDataRepo;
 import technology.rocketjump.civblitz.modgenerator.CompleteModGenerator;
 import technology.rocketjump.civblitz.modgenerator.ModHeaderGenerator;
+import technology.rocketjump.civblitz.modgenerator.ModgenStringUtils;
 import technology.rocketjump.civblitz.modgenerator.model.ModdedCivInfo;
 
 import javax.servlet.http.HttpServletResponse;
@@ -60,7 +61,8 @@ public class ModsController {
 		response.setContentType("application/zip");
 		response.setStatus(HttpServletResponse.SC_OK);
 
-		MatchWithPlayers match = matchRepo.getMatchById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		MatchWithPlayers match =
+				matchRepo.getMatchById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
 		List<ModdedCivInfo> civs = new ArrayList<>();
 		for (MatchSignupWithPlayer signup : match.signups) {
@@ -68,7 +70,8 @@ public class ModsController {
 		}
 
 		String modName = modHeaderGenerator.createFor(match.getMatchName()).modName;
-		response.addHeader("Content-Disposition", "attachment; filename=\"CivBlitz_"+modName+".zip\"");
+		response.addHeader("Content-Disposition",
+				"attachment; filename=\"CivBlitz_" + ModgenStringUtils.NormalizeString(modName) + ".zip\"");
 
 		return completeModGenerator.generateMod(match.getMatchName(), civs);
 	}

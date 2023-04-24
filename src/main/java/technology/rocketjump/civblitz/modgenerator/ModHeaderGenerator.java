@@ -8,7 +8,6 @@ import technology.rocketjump.civblitz.model.CardRarity;
 import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
 import technology.rocketjump.civblitz.modgenerator.sql.actsofgod.ActOfGod;
 
-import java.text.Normalizer;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -84,7 +83,7 @@ public class ModHeaderGenerator {
 
 	private static String getShortLeaderName(String name) {
 		// Get rid of all diacritics. I'm looking at you, Joao.
-		String normalized_name = Normalizer.normalize(name, Normalizer.Form.NFKD).replaceAll("[^\\p{Alnum}]", "");
+		String normalized_name = ModgenStringUtils.NormalizeStringCutJunk(name);
 		return normalized_name.substring(0, 3) + normalized_name.substring(normalized_name.length() - 1);
 	}
 
