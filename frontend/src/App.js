@@ -3,6 +3,7 @@ import TopLevelMenu from "./header/TopLevelMenu";
 import React, {useEffect, useState} from "react";
 import CardStore from "./cards/CardStore";
 import ModTester from "./ModTester";
+import SingleDraft from "./SingleDraft";
 import PlayerCollection from "./PlayerCollection";
 import jwt from "jsonwebtoken";
 import {Route, Switch, withRouter} from "react-router-dom";
@@ -105,6 +106,9 @@ const App = ({history}) => {
                 </Route>
                 <Route path="/modtester">
                     <ModTester/>
+                </Route>
+                <Route path="/single-draft">
+                    <SingleDraft/>
                 </Route>
                 <Route exact path="/matches">
                     <MatchesPage loggedInPlayer={loggedInPlayer} />

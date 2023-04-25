@@ -1,4 +1,4 @@
-import {Image, Menu} from "semantic-ui-react";
+import {Image, Label, Menu} from "semantic-ui-react";
 import React from "react";
 import {Link} from "react-router-dom";
 
@@ -55,6 +55,13 @@ const TopLevelMenu = ({loggedInPlayer, multiplayerEnabled, discordClientId}) => 
                 <Link to='/modtester'>
                 Mod Tester
                 </Link>
+            </Menu.Item>
+
+            <Menu.Item header>
+                <Link to='/single-draft'>
+                    Single Draft
+                </Link>
+                <Label color='red' horizontal>New!</Label>
             </Menu.Item>
 
             {loggedInPlayer &&

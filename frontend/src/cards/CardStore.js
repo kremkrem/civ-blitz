@@ -13,17 +13,6 @@ CATEGORIES.forEach(cat => {
     byCategory[cat] = [];
 })
 
-function getUniqueCardsFromCategory(category, numCards, collection = []) {
-    let selected = [];
-    while (selected.length < numCards) {
-        const possibleCard = byCategory[category][ImpRandom.getRandomInt(byCategory[category].length)];
-        if (!selected.includes(possibleCard) && !collection.includes(possibleCard)) {
-            selected.push(possibleCard);
-        }
-    }
-    return selected;
-}
-
 const CardStore = {
 
     initialised: false,
@@ -52,6 +41,17 @@ const CardStore = {
 
     getCardByTraitType: (traitType) => {
         return byTraitType[traitType];
+    },
+
+    getUniqueCardsFromCategory: (category, numCards, collection = []) => {
+        let selected = [];
+        while (selected.length < numCards) {
+            const possibleCard = byCategory[category][ImpRandom.getRandomInt(byCategory[category].length)];
+            if (!selected.includes(possibleCard) && !collection.includes(possibleCard)) {
+                selected.push(possibleCard);
+            }
+        }
+        return selected;
     }
 };
 

@@ -1,12 +1,6 @@
-import seedrandom from 'seedrandom';
 import CardInfo from "./cards/CardInfo";
 
-let clientId = localStorage.getItem('clientId');
-if (!clientId) {
-    clientId = ''+seedrandom().int32();
-    localStorage.setItem('clientId', clientId);
-}
-const rnd = seedrandom(clientId);
+const rnd = Math.random;
 
 const ImpRandom = {
 

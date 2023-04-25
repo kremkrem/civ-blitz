@@ -15,7 +15,3 @@ code {
 .ui.input {
   margin-bottom: 1em;
 }
-
-#root {
-  box-sizing: unset;
-}
