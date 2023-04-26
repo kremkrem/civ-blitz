@@ -16,13 +16,13 @@ handlers:
 - url: /images
   secure: always
   static_dir: frontend/build/images
+  expiration: 3h
 
-# This shouldn't be needed - it's outsourced to Cloud Storage
 - url: /media
   secure: always
   static_dir: frontend/build/media
+  expiration: 3h
 
-# This shouldn't be needed - it's outsourced to Cloud Storage
 - url: /static
   secure: always
   static_dir: frontend/build/static

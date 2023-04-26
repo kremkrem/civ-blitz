@@ -27,8 +27,6 @@
         <h2.db.username>sa</h2.db.username>
         <jooq.generated.source.directory>${project.build.directory}/generated-sources/jooq
         </jooq.generated.source.directory>
-        <google.storage.bucket>civ-blitz</google.storage.bucket>
-        <frontend.public.url/>
     </properties>
     <dependencies>
         <dependency>
@@ -136,9 +134,6 @@
                 <version>${frontend-maven-plugin.version}</version>
                 <configuration>
                     <workingDirectory>frontend</workingDirectory>
-                    <environmentVariables>
-                        <PUBLIC_URL>${frontend.public.url}</PUBLIC_URL>
-                    </environmentVariables>
                 </configuration>
                 <executions>
                     <execution>
@@ -368,51 +363,8 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-            <properties>
-                <frontend.public.url>https://storage.googleapis.com/civ-blitz/</frontend.public.url>
-            </properties>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <version>3.1.0</version>
-                        <executions>
-                            <execution>
-                                <id>copy-static-files-to-gcs</id>
-                                <phase>deploy</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>gsutil</executable>
-                                    <arguments>
-                                        <argument>-m</argument>
-                                        <argument>rsync</argument>
-                                        <argument>-r</argument>
-                                        <argument>./frontend/build</argument>
-                                        <argument>gs://${google.storage.bucket}/</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>configure-cors-in-gcs</id>
-                                <phase>deploy</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>gsutil</executable>
-                                    <arguments>
-                                        <argument>cors</argument>
-                                        <argument>set</argument>
-                                        <argument>./src/main/gcs/cors.json</argument>
-                                        <argument>gs://${google.storage.bucket}/</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
                     <plugin>
                         <groupId>com.google.cloud.tools</groupId>
                         <artifactId>appengine-maven-plugin</artifactId>
