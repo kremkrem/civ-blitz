@@ -18,7 +18,9 @@ const ConstructedCiv = ({index, cards, editable, onCardClick, onConfirmClick, al
     if (cards) {
         cards.forEach(card => {
             searchParams.append('cardIdentifier', card.identifier);
-            startBiases[card.civilizationType] = card.civilizationFriendlyName;
+            if (card.civilizationType !== 'imperium') {
+                startBiases[card.civilizationType] = card.civilizationFriendlyName;
+            }
         });
     }
     if (setSelectedBias) {
@@ -51,7 +53,7 @@ const ConstructedCiv = ({index, cards, editable, onCardClick, onConfirmClick, al
 
 
             <Container style={{'paddingTop': '2em'}}>
-                {cards.length > 0 &&
+                {options.length > 0 &&
                 <div style={{'paddingBottom': '1em'}}>
                     <Select placeholder='Select start bias...' options={options} onChange={(event, {value}) => setSelectedBias(value)}/>
                 </div>
