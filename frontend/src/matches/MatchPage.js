@@ -1,4 +1,4 @@
-import {Button, CardGroup, Container, Header, List, Loader, Segment} from "semantic-ui-react";
+import {Button, CardGroup, Container, Header, List, Loader, Message, Segment} from "semantic-ui-react";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import PlayerAvatar from "../player/PlayerAvatar";
@@ -31,8 +31,8 @@ const MatchPage = ({loggedInPlayer}) => {
     const [showAdminClaimObjectiveModal, setShowAdminClaimObjectiveModal] = useState(false);
     const [showAdminUnclaimObjectiveModal, setShowAdminUnclaimObjectiveModal] = useState(false);
 
-    const currentPlayerSignup = match.signups && match.signups.find(s => s.playerId === loggedInPlayer.discordId);
-    const playerIsAdminNotInMatch = !currentPlayerSignup && loggedInPlayer.isAdmin;
+    const currentPlayerSignup = loggedInPlayer && match.signups && match.signups.find(s => s.playerId === loggedInPlayer.discordId);
+    const playerIsAdminNotInMatch = loggedInPlayer && !currentPlayerSignup && loggedInPlayer.isAdmin;
 
     useEffect(() => {
         axios.get('/api/matches/' + matchId)
@@ -117,7 +117,7 @@ const MatchPage = ({loggedInPlayer}) => {
     const objectiveToCard = (objective) => {
         const claimedByPlayers = objective.claimedByPlayerIds.map(id => match.signups.find(s => s.playerId === id));
         const objectiveClicked = (objective) => {
-            if (objective.claimedByPlayerIds.includes(loggedInPlayer.discordId)) {
+            if (loggedInPlayer && objective.claimedByPlayerIds.includes(loggedInPlayer.discordId)) {
                 setUnclaimingObjective(objective);
             } else {
                 setClaimingObjective(objective);
@@ -156,6 +156,12 @@ const MatchPage = ({loggedInPlayer}) => {
                         onMatchDeleted={onMatchDeleted}/>
 
                     {match.matchState === 'SIGNUPS' && match.signups.map(signupToPlayerSection)}
+                    {match.matchState === 'SIGNUPS' && !loggedInPlayer &&
+                        <Message info>
+                            <Message.Header>Want to join this match?</Message.Header>
+                            <p>Please <strong>log in</strong> first, by using the button in the top bar!</p>
+                        </Message>
+                    }
 
                     {match.matchState !== 'SIGNUPS' &&
                         <React.Fragment>

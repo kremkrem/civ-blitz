@@ -1,4 +1,4 @@
-import {Container, Header, List, Loader, Segment} from "semantic-ui-react";
+import {Container, Header, List, Loader, Message, Segment} from "semantic-ui-react";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import PlayerAvatar from "../player/PlayerAvatar";
@@ -45,6 +45,12 @@ const MatchesPage = ({loggedInPlayer}) => {
             <List horizontal>
                 {playerSections}
             </List>
+            }
+            {!loggedInPlayer && 
+            <Message info>
+                <Message.Header>Want to join this match?</Message.Header>
+                <p>Please <strong>log in</strong> first, by using the button in the top bar!</p>
+            </Message>
             }
         </Segment>
     })

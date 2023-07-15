@@ -59,7 +59,8 @@ public class MatchesController {
 	}
 
 	@GetMapping
-	public List<MatchWithPlayers> getUncompletedMatches(@RequestHeader("Authorization") String jwToken) {
+	public List<MatchWithPlayers> getUncompletedMatches(
+			@RequestHeader(value = "Authorization", required = false) String jwToken) {
 		List<MatchWithPlayers> matches = matchService.getUncompletedMatches();
 		String currentPlayerId = jwToken == null ? null : jwtService.parse(jwToken).getDiscordId();
 		matches.forEach(match -> {
@@ -76,7 +77,7 @@ public class MatchesController {
 	}
 
 	@PostMapping
-	public Match createMatch(@RequestHeader("Authorization") String jwToken,
+	public Match createMatch(@RequestHeader(value = "Authorization", required = false) String jwToken,
 							 @RequestBody Map<String, Object> payload) {
 		if (jwToken == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
@@ -98,7 +99,8 @@ public class MatchesController {
 	}
 
 	@GetMapping("/{matchId}")
-	public DecoratedMatch getMatch(@RequestHeader("Authorization") String jwToken, @PathVariable int matchId) {
+	public DecoratedMatch getMatch(@RequestHeader(value = "Authorization", required = false) String jwToken,
+								   @PathVariable int matchId) {
 		MatchWithPlayers match = matchService.getById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		if (match.getMatchState().equals(DRAFT)) {
 			// Hide other players' selections in draft stage
@@ -113,7 +115,8 @@ public class MatchesController {
 	}
 
 	@DeleteMapping("/{matchId}")
-	public void deleteMatch(@RequestHeader("Authorization") String jwToken, @PathVariable int matchId) {
+	public void deleteMatch(@RequestHeader(value = "Authorization", required = false) String jwToken,
+							@PathVariable int matchId) {
 		if (jwToken == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		} else {
@@ -156,7 +159,8 @@ public class MatchesController {
 	}
 
 	@GetMapping("/{matchId}/secret_objectives")
-	public List<SecretObjectiveResponse> getMatchSecretObjectives(@RequestHeader("Authorization") String jwToken, @PathVariable int matchId) {
+	public List<SecretObjectiveResponse> getMatchSecretObjectives(
+			@RequestHeader(value = "Authorization", required = false) String jwToken, @PathVariable int matchId) {
 		if (jwToken == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		} else {
@@ -172,8 +176,8 @@ public class MatchesController {
 	}
 
 	@PostMapping("/{matchId}/objectives/{objectiveId}")
-	public void claimObjective(@RequestHeader("Authorization") String jwToken, @PathVariable int matchId,
-														@PathVariable String objectiveId) {
+	public void claimObjective(@RequestHeader(value = "Authorization", required = false) String jwToken,
+							   @PathVariable int matchId, @PathVariable String objectiveId) {
 		if (jwToken == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		} else {
@@ -186,8 +190,8 @@ public class MatchesController {
 	}
 
 	@DeleteMapping("/{matchId}/objectives/{objectiveId}")
-	public void unclaimObjective(@RequestHeader("Authorization") String jwToken, @PathVariable int matchId,
-									 @PathVariable String objectiveId) {
+	public void unclaimObjective(@RequestHeader(value = "Authorization", required = false) String jwToken,
+								 @PathVariable int matchId, @PathVariable String objectiveId) {
 		if (jwToken == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		} else {
@@ -201,7 +205,8 @@ public class MatchesController {
 
 
 	@GetMapping("/{matchId}/all_secret_objectives")
-	public List<SecretObjectiveResponse> getAllMatchSecretObjectives(@RequestHeader("Authorization") String jwToken, @PathVariable int matchId) {
+	public List<SecretObjectiveResponse> getAllMatchSecretObjectives(
+			@RequestHeader(value = "Authorization", required = false) String jwToken, @PathVariable int matchId) {
 		if (jwToken == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		} else {
@@ -217,9 +222,9 @@ public class MatchesController {
 	}
 
 	@PostMapping("/{matchId}/secret_objectives/{objective}")
-	public List<SecretObjectiveResponse> updateMatchSecretObjectives(@RequestHeader("Authorization") String jwToken,
-																	 @PathVariable int matchId,
-																	 @PathVariable String objective) {
+	public List<SecretObjectiveResponse> updateMatchSecretObjectives(
+			@RequestHeader(value = "Authorization", required = false) String jwToken, @PathVariable int matchId,
+			@PathVariable String objective) {
 		if (jwToken == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		} else {
@@ -261,7 +266,7 @@ public class MatchesController {
 	}
 
 	@PostMapping("/{matchId}")
-	public Match editMatch(@RequestHeader("Authorization") String jwToken,
+	public Match editMatch(@RequestHeader(value = "Authorization", required = false) String jwToken,
 						   @RequestBody Map<String, Object> payload, @PathVariable int matchId) {
 		if (jwToken == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
@@ -297,8 +302,9 @@ public class MatchesController {
 	}
 
 	@PostMapping("/{matchId}/cards")
-	public MatchSignupWithPlayer addCardToMatchDeck(@RequestHeader("Authorization") String jwToken, @PathVariable int matchId,
-													@RequestBody Map<String, Object> payload) {
+	public MatchSignupWithPlayer addCardToMatchDeck(
+			@RequestHeader(value = "Authorization", required = false) String jwToken, @PathVariable int matchId,
+			@RequestBody Map<String, Object> payload) {
 		if (jwToken == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		} else {
@@ -316,8 +322,9 @@ public class MatchesController {
 	}
 
 	@PostMapping("/{matchId}/cards/remove")
-	public MatchSignupWithPlayer removeCardFromMatchDeck(@RequestHeader("Authorization") String jwToken, @PathVariable int matchId,
-														 @RequestBody Map<String, Object> payload) {
+	public MatchSignupWithPlayer removeCardFromMatchDeck(
+			@RequestHeader(value = "Authorization", required = false) String jwToken, @PathVariable int matchId,
+			@RequestBody Map<String, Object> payload) {
 		if (jwToken == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		} else {
@@ -334,8 +341,9 @@ public class MatchesController {
 	}
 
 	@PostMapping("/{matchId}/bias")
-	public MatchSignupWithPlayer setBiasForSignup(@RequestHeader("Authorization") String jwToken, @PathVariable int matchId,
-												  @RequestBody Map<String, Object> payload) {
+	public MatchSignupWithPlayer setBiasForSignup(
+			@RequestHeader(value = "Authorization", required = false) String jwToken, @PathVariable int matchId,
+			@RequestBody Map<String, Object> payload) {
 		if (jwToken == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		} else {
@@ -352,7 +360,8 @@ public class MatchesController {
 	}
 
 	@PostMapping("/{matchId}/commit")
-	public MatchSignupWithPlayer commitSignup(@RequestHeader("Authorization") String jwToken, @PathVariable int matchId) {
+	public MatchSignupWithPlayer commitSignup(@RequestHeader(value = "Authorization", required = false) String jwToken,
+											  @PathVariable int matchId) {
 		if (jwToken == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		} else {
@@ -368,7 +377,8 @@ public class MatchesController {
 	}
 
 	@DeleteMapping("/{matchId}/commit")
-	public MatchSignupWithPlayer uncommitSignup(@RequestHeader("Authorization") String jwToken, @PathVariable int matchId) {
+	public MatchSignupWithPlayer uncommitSignup(
+			@RequestHeader(value = "Authorization", required = false) String jwToken, @PathVariable int matchId) {
 		if (jwToken == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		} else {
@@ -384,7 +394,8 @@ public class MatchesController {
 	}
 
 	@PostMapping("/{matchId}/players")
-	public void signupToMatch(@RequestHeader("Authorization") String jwToken, @PathVariable int matchId) {
+	public void signupToMatch(@RequestHeader(value = "Authorization", required = false) String jwToken,
+							  @PathVariable int matchId) {
 		if (jwToken == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		} else {
@@ -395,7 +406,8 @@ public class MatchesController {
 	}
 
 	@PostMapping("/{matchId}/spectator")
-	public void toggleSpectator(@RequestHeader("Authorization") String jwToken, @PathVariable int matchId) {
+	public void toggleSpectator(@RequestHeader(value = "Authorization", required = false) String jwToken,
+								@PathVariable int matchId) {
 		if (jwToken == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		} else {
@@ -411,8 +423,9 @@ public class MatchesController {
 
 	@PutMapping("/{matchId}/{matchState}")
 	@Transactional
-	public Match switchMatchState(@RequestHeader("Authorization") String jwToken,
-								  @RequestBody Map<String, Object> payload, @PathVariable int matchId, @PathVariable MatchState matchState) {
+	public Match switchMatchState(@RequestHeader(value = "Authorization", required = false) String jwToken,
+								  @RequestBody Map<String, Object> payload, @PathVariable int matchId,
+								  @PathVariable MatchState matchState) {
 		if (jwToken == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		} else {
@@ -435,7 +448,8 @@ public class MatchesController {
 
 
 	@DeleteMapping("/{matchId}/players")
-	public void resignFromMatch(@RequestHeader("Authorization") String jwToken, @PathVariable int matchId) {
+	public void resignFromMatch(@RequestHeader(value = "Authorization", required = false) String jwToken,
+								@PathVariable int matchId) {
 		if (jwToken == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		} else {
