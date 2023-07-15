@@ -108,7 +108,7 @@ const App = ({history}) => {
                     <ModTester/>
                 </Route>
                 <Route path="/single-draft">
-                    <SingleDraft/>
+                    <SingleDraft loggedInPlayer={loggedInPlayer}/>
                 </Route>
                 <Route exact path="/matches">
                     <MatchesPage loggedInPlayer={loggedInPlayer} />

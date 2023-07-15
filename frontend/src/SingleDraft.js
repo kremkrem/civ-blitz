@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { Button, Checkbox, Container, Dropdown, Form, Header, Segment } from "semantic-ui-react";
 import ImpRandom from "./ImpRandom";
 import ConstructedCiv from "./ConstructedCiv.js";
 import CardStore, { MAIN_CATEGORIES } from "./cards/CardStore";
 import CivCardGroup from "./cards/CivCardGroup";
 
-const SingleDraft = () => {
+const SingleDraft = ({loggedInPlayer}) => {
     const [collection, setCollection] = useState([]);
     const [selectedCards, setSelectedCards] = useState([]);
     const [useUpgrades, setUseUpgrades] = useState(false);
@@ -22,7 +23,18 @@ const SingleDraft = () => {
         setSelectedCards([]);
     };
 
-    useEffect(rerollDraft, []);
+    useEffect(() => {
+        if (loggedInPlayer) {
+            axios.get('/api/dlc')
+                .then(response => {
+                    setDlcSettings(
+                        response.data.filter(
+                            dlc => dlc.enabled && allDlcs.some(d => d == dlc.dlcName)).map(dlc => dlc.dlcName))
+                })
+                .catch(console.error);
+        }
+        rerollDraft();
+    }, [loggedInPlayer]);
 
     const collectionCardClicked = (card) => {
         const maxOneOfCategory = MAIN_CATEGORIES.includes(card.cardCategory);
