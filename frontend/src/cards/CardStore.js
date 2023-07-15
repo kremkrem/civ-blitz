@@ -1,6 +1,7 @@
 import ImpRandom from "../ImpRandom";
 
 let allCards = [];
+let dlcs = [];
 
 export const CATEGORIES = ["CivilizationAbility", "LeaderAbility", "UniqueInfrastructure", "UniqueUnit", "Power", "ActOfGod"];
 export const MAIN_CATEGORIES = ["CivilizationAbility", "LeaderAbility", "UniqueInfrastructure", "UniqueUnit"];
@@ -27,6 +28,9 @@ const CardStore = {
                 if (card.cardCategory === 'CivilizationAbility') {
                     mediaByCivType[card.civilizationType] = card.mediaName;
                 }
+                if (!(dlcs.includes(card.requiredDlc))) {
+                    dlcs.push(card.requiredDlc);
+                }
             });
             CardStore.initialised = true;
         }
@@ -36,11 +40,15 @@ const CardStore = {
         return allCards;
     },
 
+    getDlcs: () => {
+        return dlcs;
+    },
+
     getMediaNameForCivType: (civType) => {
         return mediaByCivType[civType];
     },
 
-    getUniqueCardsFromCategory: (category, numCards, upgraded=false) => {
+    getUniqueCardsFromCategory: (category, numCards, upgraded=false, dlcList=dlcs) => {
         let selected = [];
         let rarityWeightedList = ["Common"];
 
@@ -56,7 +64,9 @@ const CardStore = {
         while (selected.length < numCards) {
             const rarity = rarityWeightedList[ImpRandom.getRandomInt(rarityWeightedList.length)];
             const cardList = byCategoryAndRarity[category][rarity].filter(
-                card => !selected.some((c) => c.identifier == card.identifier));
+                card =>
+                    !selected.some((c) => c.identifier == card.identifier) &&
+                    dlcList.some((dlc) => dlc == card.requiredDlc));
             if (cardList.length > 0) {
                 const possibleCard = cardList[ImpRandom.getRandomInt(cardList.length)];
                 selected.push(possibleCard);

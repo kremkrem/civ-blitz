@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class DlcService {
 
 	private static final String CIV_6_BASE_GAME = "Civilization VI Base Game";
-	private static final String GATHERING_STORM_EXPANSION = "Gathering Storm expansion";
+	public static final String GATHERING_STORM_EXPANSION = "Gathering Storm expansion";
 	private final SourceDataRepo sourceDataRepo;
 	private final DlcRepo dlcRepo;
 	private final CollectionService collectionService;

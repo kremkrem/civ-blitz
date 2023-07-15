@@ -139,6 +139,7 @@ public class ActOfGodCardsParser {
 			card.setRarity(rarity);
 			card.setMediaName("ActOfGod/" + identifier);
 			card.setActOfGod(Optional.of(act));
+			card.setRequiredDlc(DlcService.GATHERING_STORM_EXPANSION);
 
 			return Optional.of(card);
 		}

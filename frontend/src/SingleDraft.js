@@ -1,22 +1,25 @@
-import React, {useEffect, useState} from "react";
-import {Button, Checkbox, Container, Form, Header, Segment} from "semantic-ui-react";
+import React, { useEffect, useState } from "react";
+import { Button, Checkbox, Container, Dropdown, Form, Header, Segment } from "semantic-ui-react";
 import ImpRandom from "./ImpRandom";
 import ConstructedCiv from "./ConstructedCiv.js";
-import CardStore, {MAIN_CATEGORIES} from "./cards/CardStore";
+import CardStore, { MAIN_CATEGORIES } from "./cards/CardStore";
 import CivCardGroup from "./cards/CivCardGroup";
 
 const SingleDraft = () => {
     const [collection, setCollection] = useState([]);
     const [selectedCards, setSelectedCards] = useState([]);
     const [useUpgrades, setUseUpgrades] = useState(false);
+    const allDlcs = CardStore.getDlcs()
+    const dlcOptions = allDlcs.map(dlc => { return { key: dlc, text: dlc, value: dlc }; })
+    const [dlcSettings, setDlcSettings] = useState(allDlcs);
     const rerollDraft = () => {
-            let cards = [];
-            cards = [].concat(...(MAIN_CATEGORIES.map(cat => {
-                return CardStore.getUniqueCardsFromCategory(cat, 4, useUpgrades);
-            })));
-            cards.sort(ImpRandom.cardSort);
-            setCollection(cards);
-            setSelectedCards([]);
+        let cards = [];
+        cards = [].concat(...(MAIN_CATEGORIES.map(cat => {
+            return CardStore.getUniqueCardsFromCategory(cat, 4, useUpgrades, dlcSettings);
+        })));
+        cards.sort(ImpRandom.cardSort);
+        setCollection(cards);
+        setSelectedCards([]);
     };
 
     useEffect(rerollDraft, []);
@@ -51,6 +54,8 @@ const SingleDraft = () => {
         setCollection(updatedCollection);
     };
 
+    const onDlcChange = (e, { value }) => setDlcSettings(value)
+
     return (
         <React.Fragment>
             <Container>
@@ -59,15 +64,27 @@ const SingleDraft = () => {
                     <Form>
                         <Form.Field>
                             <Checkbox toggle label='Include upgraded (non-common) cards in the draft'
-                                checked={useUpgrades} onChange={(e, data) => setUseUpgrades(data.checked)}/>
+                                checked={useUpgrades} onChange={(e, data) => setUseUpgrades(data.checked)} />
+                        </Form.Field>
+                        <Form.Field>
+                            <Dropdown
+                                placeholder='DLCs'
+                                fluid
+                                multiple
+                                search
+                                selection
+                                options={dlcOptions}
+                                value={dlcSettings}
+                                onChange={onDlcChange}
+                            />
                         </Form.Field>
                         <Button onClick={rerollDraft}>Draft new cards</Button>
                     </Form>
                 </Segment>
                 <ConstructedCiv index='single draft' cards={selectedCards} editable={true} alwaysEditing={true}
-                                onCardClick={civCardClicked} />
+                    onCardClick={civCardClicked} />
             </Container>
-            <Container style={{marginTop: '1em'}}>
+            <Container style={{ marginTop: '1em' }}>
                 <Header as='h2'>Drafted cards</Header>
                 <CivCardGroup cards={collection} cardClicked={collectionCardClicked} />
             </Container>
