@@ -61,7 +61,7 @@ const TopLevelMenu = ({loggedInPlayer, multiplayerEnabled, discordClientId}) => 
                 <Link to='/single-draft'>
                     Single Draft
                 </Link>
-                <Label color='red' horizontal>New!</Label>
+                {/*<Label color='red' horizontal>New!</Label>*/}
             </Menu.Item>
 
             {loggedInPlayer &&
