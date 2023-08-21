@@ -28,7 +28,7 @@ public class ModInfoGenerator extends BlitzFileGenerator {
 		return "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
 				"<Mod id=\"" + modHeader.id + "\" version=\"1\">\n" +
 				"  <Properties>\n" +
-				"    <Name>Civ-Blitz " + modHeader.modName + "</Name>\n" +
+				"    <Name>Civ-Blitz " + modHeader.prettyModName + "</Name>\n" +
 				"    <Description>" + modHeader.modDescription + "</Description>\n" +
 				"    <Created>" + Instant.now().getEpochSecond() + "</Created>\n" +
 				"    <Teaser>" + modHeader.modDescription + "</Teaser>\n" +
