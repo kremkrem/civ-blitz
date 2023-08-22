@@ -28,9 +28,37 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				    <Element>
 				      <ConsumerName text="Audio"/>
 				      <ArtDefDependencyPaths>
+				      	<Element text="Cultures.artdef"/>
 				        <Element text="Leaders.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies/>
+				      <LoadsLibraries>true</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="Cultures"/>
+				      <ArtDefDependencyPaths>
+				      	<Element text="Cultures.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies/>
+				      <LoadsLibraries>true</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="Improvements"/>
+				      <ArtDefDependencyPaths>
+				      	<Element text="Cultures.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies/>
+				      <LoadsLibraries>true</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="Landmarks"/>
+				      <ArtDefDependencyPaths>
+				        <Element text="Cultures.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies>
+				        <Element text="CityBuildings"/>
+				        <Element text="TileBase"/>
+				      </LibraryDependencies>
 				      <LoadsLibraries>true</LoadsLibraries>
 				    </Element>
 				    <Element>
@@ -59,6 +87,24 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <LibraryDependencies>
 				        <Element text="LeaderLighting"/>
 				      </LibraryDependencies>
+				      <LoadsLibraries>true</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="Units"/>
+				      <ArtDefDependencyPaths>
+				      	<Element text="Cultures.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies>
+				        <Element text="Unit"/>
+				      </LibraryDependencies>
+				      <LoadsLibraries>true</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="WorldView_Translate"/>
+				      <ArtDefDependencyPaths>
+				      	<Element text="Cultures.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies/>
 				      <LoadsLibraries>true</LoadsLibraries>
 				    </Element>
 				  </SystemDependencies>

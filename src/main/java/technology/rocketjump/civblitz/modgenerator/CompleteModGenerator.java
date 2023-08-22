@@ -6,8 +6,7 @@ import org.springframework.stereotype.Component;
 import technology.rocketjump.civblitz.infrastructurefix.InfrastructureFixFileProvider;
 import technology.rocketjump.civblitz.infrastructurefix.StaticModFile;
 import technology.rocketjump.civblitz.model.CardCategory;
-import technology.rocketjump.civblitz.modgenerator.artdef.FallbackLeadersArtDefGenerator;
-import technology.rocketjump.civblitz.modgenerator.artdef.LeadersArtDefGenerator;
+import technology.rocketjump.civblitz.modgenerator.artdef.AllArtDefGenerators;
 import technology.rocketjump.civblitz.modgenerator.dep.ArtDepGenerator;
 import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
 import technology.rocketjump.civblitz.modgenerator.model.ModdedCivInfo;
@@ -35,8 +34,7 @@ public class CompleteModGenerator {
 								ColorsSqlGenerator colorsSqlGenerator, ConfigurationSqlGenerator configurationSqlGenerator,
 								GeographySqlGenerator geographySqlGenerator, IconsSqlGenerator iconsSqlGenerator,
 								LeaderSqlGenerator leaderSqlGenerator, LeaderTextSqlGenerator leaderTextSqlGenerator,
-								ArtDepGenerator artDepGenerator, LeadersArtDefGenerator leadersArtDefGenerator,
-								FallbackLeadersArtDefGenerator fallbackLeadersArtDefGenerator,
+								ArtDepGenerator artDepGenerator, AllArtDefGenerators allArtDefGenerators,
 								InfrastructureFixFileProvider infrastructureFixFileProvider) {
 		this.modHeaderGenerator = modHeaderGenerator;
 		this.infrastructureFixFileProvider = infrastructureFixFileProvider;
@@ -51,8 +49,7 @@ public class CompleteModGenerator {
 		fileGeneratorList.add(leaderSqlGenerator);
 		fileGeneratorList.add(leaderTextSqlGenerator);
 		fileGeneratorList.add(artDepGenerator);
-		fileGeneratorList.add(leadersArtDefGenerator);
-		fileGeneratorList.add(fallbackLeadersArtDefGenerator);
+		fileGeneratorList.addAll(allArtDefGenerators.getAll());
 	}
 
 	public byte[] generateMod(String matchName, List<ModdedCivInfo> moddedCivs) throws IOException {

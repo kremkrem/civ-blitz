@@ -204,4 +204,16 @@ public class ResourceFiles {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Value("classpath:csv/CivilizationsCulture.csv")
+	private Resource civilizationsCultureFile;
+
+	@Bean(name = "CivilizationsCulture")
+	public String CivilizationsCulture() {
+		try (InputStream is = civilizationsCultureFile.getInputStream()) {
+			return StreamUtils.copyToString(is, StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
