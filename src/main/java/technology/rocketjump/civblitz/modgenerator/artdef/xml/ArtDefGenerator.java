@@ -27,17 +27,21 @@ public abstract class ArtDefGenerator extends BlitzFileGenerator {
 		Element templateName = document.createElement("m_TemplateName");
 		templateName.setAttribute("text", getTemplateName());
 		root.appendChild(templateName);
-		for (Collection collection : getRootCollections()) {
-			root.appendChild(collection.getDomElement(document));
-		}
 
+		Element rootCollections = document.createElement("m_RootCollections");
+		for (Collection collection : getRootCollections(modHeader, civs)) {
+			rootCollections.appendChild(collection.toElement(document));
+		}
+		root.appendChild(rootCollections);
+
+		document.appendChild(root);
 		DOMSource domSource = new DOMSource(document);
 		try {
 			Transformer transformer = xmlBuildersProvider.getTransformer();
 			StringWriter writer = new StringWriter();
 			StreamResult streamResult = new StreamResult(writer);
 			transformer.transform(domSource, streamResult);
-			return writer.toString();
+			return writer.toString().replaceAll(" {4}", "\t");
 		} catch (TransformerException e) {
 			throw new RuntimeException(e);
 		}
@@ -48,11 +52,9 @@ public abstract class ArtDefGenerator extends BlitzFileGenerator {
 		return getFileContents(modHeader, List.of(civInfo));
 	}
 
-	protected String getTemplateName() {
-		return "";
-	}
+	protected abstract String getTemplateName();
 
-	protected abstract List<Collection> getRootCollections();
+	protected abstract List<Collection> getRootCollections(ModHeader modHeader, List<ModdedCivInfo> civs);
 
 	private Element version(Document document) {
 		Element v = document.createElement("m_Version");

@@ -28,13 +28,13 @@ public class ArtDefReferenceValue extends AssetObject {
 	}
 
 	@Override
-	protected List<ElementEntry> getEntries() {
+	protected List<XmlNode> getEntries() {
 		return List.of(
-				new ElementEntry("m_ElementName", elementName),
-				new ElementEntry("m_RootCollectionName", rootCollectionName),
-				new ElementEntry("m_ArtDefPath", artDefPath),
+				new TextEntry("m_ElementName", elementName),
+				new TextEntry("m_RootCollectionName", rootCollectionName),
+				new TextEntry("m_ArtDefPath", artDefPath),
 				new TextNodeEntry("m_CollectionIsLocked", Boolean.toString(collectionIsLocked)),
-				new ElementEntry("m_TemplateName", templateName)
+				new TextEntry("m_TemplateName", templateName)
 		);
 	}
 

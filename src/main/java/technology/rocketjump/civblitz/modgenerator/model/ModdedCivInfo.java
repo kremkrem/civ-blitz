@@ -2,6 +2,7 @@ package technology.rocketjump.civblitz.modgenerator.model;
 
 import technology.rocketjump.civblitz.model.Card;
 import technology.rocketjump.civblitz.model.CardCategory;
+import technology.rocketjump.civblitz.modgenerator.ModHeaderGenerator;
 
 import java.util.List;
 
@@ -22,6 +23,10 @@ public class ModdedCivInfo {
 
 	public Card getCard(CardCategory cardCategory) {
 		return selectedCards.stream().filter(c -> c.getCardCategory().equals(cardCategory)).findFirst().orElseThrow();
+	}
+
+	public String getCivDBName() {
+		return "LEADER_IMP_" + ModHeaderGenerator.buildName(selectedCards).toUpperCase();
 	}
 
 }

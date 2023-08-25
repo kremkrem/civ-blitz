@@ -25,13 +25,13 @@ public class BLPEntryValue extends AssetObject {
 	}
 
 	@Override
-	protected List<ElementEntry> getEntries() {
+	protected List<XmlNode> getEntries() {
 		return List.of(
-				new ElementEntry("m_EntryName", name),
-				new ElementEntry("m_XLPClass", xlpClass),
-				new ElementEntry("m_XLPPath", xlpPath),
-				new ElementEntry("m_BLPPackage", blpPackage),
-				new ElementEntry("m_LibraryName", libraryName)
+				new TextEntry("m_EntryName", name),
+				new TextEntry("m_XLPClass", xlpClass),
+				new TextEntry("m_XLPPath", xlpPath),
+				new TextEntry("m_BLPPackage", blpPackage),
+				new TextEntry("m_LibraryName", libraryName)
 		);
 	}
 

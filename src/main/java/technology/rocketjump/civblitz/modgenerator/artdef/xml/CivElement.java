@@ -31,12 +31,12 @@ public class CivElement implements XmlNode{
 	}
 
 	@Override
-	public Element getDomElement(Document document) {
+	public Element toElement(Document document) {
 		Element e = document.createElement("Element");
 
 		Element valuesElement = document.createElement("m_Values");
 		for (AssetObject field : fields) {
-			valuesElement.appendChild(field.getDomElement(document));
+			valuesElement.appendChild(field.toElement(document));
 		}
 		Element fieldsElement = document.createElement("m_Fields");
 		fieldsElement.appendChild(valuesElement);
@@ -44,7 +44,7 @@ public class CivElement implements XmlNode{
 
 		Element childCollectionsElement = document.createElement("m_ChildCollections");
 		for (Collection collection : childCollections) {
-			childCollectionsElement.appendChild(collection.getDomElement(document));
+			childCollectionsElement.appendChild(collection.toElement(document));
 		}
 		e.appendChild(childCollectionsElement);
 

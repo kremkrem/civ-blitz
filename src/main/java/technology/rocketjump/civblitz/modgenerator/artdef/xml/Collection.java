@@ -27,7 +27,7 @@ public class Collection implements XmlNode{
 	}
 
 	@Override
-	public Element getDomElement(Document document) {
+	public Element toElement(Document document) {
 		Element e = document.createElement("Element");
 
 		Element collectionName = document.createElement("m_CollectionName");
@@ -39,7 +39,7 @@ public class Collection implements XmlNode{
 		e.appendChild(isReplace);
 
 		for (CivElement civElement : civElements) {
-			e.appendChild(civElement.getDomElement(document));
+			e.appendChild(civElement.toElement(document));
 		}
 
 		return e;

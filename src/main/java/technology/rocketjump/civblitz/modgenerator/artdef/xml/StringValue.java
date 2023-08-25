@@ -12,8 +12,8 @@ public class StringValue extends AssetObject{
 	}
 
 	@Override
-	protected List<ElementEntry> getEntries() {
-		return List.of(new ElementEntry("m_Value", value));
+	protected List<XmlNode> getEntries() {
+		return List.of(new TextEntry("m_Value", value));
 	}
 
 	@Override
