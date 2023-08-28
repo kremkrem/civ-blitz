@@ -34,6 +34,9 @@ public class CivilizationCulturesParser {
 					.filter(r -> "UnitCulture".equals(r.get("CultureType")))
 					.collect(Collectors.groupingBy(r -> r.get("CivilizationType"),
 							Collectors.mapping(r -> r.get("Culture"), Collectors.toList()))));
+			sourceDataRepo.civilizationToCivilizationArtdef.putAll(records.stream()
+					.filter(r -> "Audio".equals(r.get("CultureType")))
+					.collect(Collectors.toMap(r -> r.get("CivilizationType"), r -> r.get("Culture"))));
 		}
 	}
 }

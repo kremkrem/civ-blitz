@@ -17,7 +17,13 @@ public class AllArtDefGenerators {
 	@Autowired
 	private CulturesArtDefGenerator culturesArtDefGenerator;
 
+	@Autowired
+	private CivilizationsArtDefGenerator civilizationsArtDefGenerator;
+
 	public List<BlitzFileGenerator> getAll() {
-		return List.of(leadersArtDefGenerator, fallbackLeadersArtDefGenerator, culturesArtDefGenerator);
+		return List.of(leadersArtDefGenerator,
+				fallbackLeadersArtDefGenerator,
+				culturesArtDefGenerator,
+				civilizationsArtDefGenerator);
 	}
 }

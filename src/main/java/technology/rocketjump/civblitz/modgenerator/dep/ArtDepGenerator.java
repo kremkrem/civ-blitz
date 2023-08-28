@@ -28,6 +28,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				    <Element>
 				      <ConsumerName text="Audio"/>
 				      <ArtDefDependencyPaths>
+				      	<Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
 				        <Element text="Leaders.artdef"/>
 				      </ArtDefDependencyPaths>
@@ -35,39 +36,71 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <LoadsLibraries>true</LoadsLibraries>
 				    </Element>
 				    <Element>
+				      <ConsumerName text="Civilizations"/>
+				      <ArtDefDependencyPaths>
+				      	<Element text="Civilizations.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies/>
+				      <LoadsLibraries>false</LoadsLibraries>
+				    </Element>
+				    <Element>
 				      <ConsumerName text="Cultures"/>
 				      <ArtDefDependencyPaths>
+				      	<Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies/>
+				      <LoadsLibraries>false</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="Farms"/>
+				      <ArtDefDependencyPaths>
+				      	<Element text="Civilizations.artdef"/>
+				        <Element text="Cultures.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies>
+				        <Element text="TileBase/>
+				        <Element text="CityBuildings/>
+				      </LibraryDependencies>
 				      <LoadsLibraries>true</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="Features"/>
+				      <ArtDefDependencyPaths>
+				      	<Element text="Civilizations.artdef"/>
+				        <Element text="Cultures.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies/>
+				      <LoadsLibraries>false</LoadsLibraries>
 				    </Element>
 				    <Element>
 				      <ConsumerName text="Improvements"/>
 				      <ArtDefDependencyPaths>
+				      	<Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies/>
-				      <LoadsLibraries>true</LoadsLibraries>
+				      <LoadsLibraries>false</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="IndirectGrid"/>
+				      <ArtDefDependencyPaths>
+				      	<Element text="Civilizations.artdef"/>
+				      	<Element text="Cultures.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies/>
+				      <LoadsLibraries>false</LoadsLibraries>
 				    </Element>
 				    <Element>
 				      <ConsumerName text="Landmarks"/>
 				      <ArtDefDependencyPaths>
+				        <Element text="Civilizations.artdef"/>
 				        <Element text="Cultures.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies>
 				        <Element text="CityBuildings"/>
 				        <Element text="TileBase"/>
-				      </LibraryDependencies>
-				      <LoadsLibraries>true</LoadsLibraries>
-				    </Element>
-				    <Element>
-				      <ConsumerName text="Leaders"/>
-				      <ArtDefDependencyPaths>
-				        <Element text="Leaders.artdef"/>
-				      </ArtDefDependencyPaths>
-				      <LibraryDependencies>
-				        <Element text="Leader"/>
+				        <Element text="RouteDecalMaterial"/>
 				      </LibraryDependencies>
 				      <LoadsLibraries>true</LoadsLibraries>
 				    </Element>
@@ -86,28 +119,195 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <ArtDefDependencyPaths/>
 				      <LibraryDependencies>
 				        <Element text="LeaderLighting"/>
+				        <Element text="ColorKey"/>
 				      </LibraryDependencies>
 				      <LoadsLibraries>true</LoadsLibraries>
 				    </Element>
 				    <Element>
+				      <ConsumerName text="Leaders"/>
+				      <ArtDefDependencyPaths>
+				        <Element text="Leaders.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies>
+				        <Element text="Leader"/>
+				        <Element text="LeaderLighting"/>
+				        <Element text="ColorKey"/>
+				      </LibraryDependencies>
+				      <LoadsLibraries>true</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="Resources"/>
+				      <ArtDefDependencyPaths>
+				      	<Element text="Civilizations.artdef"/>
+				      	<Element text="Cultures.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies/>
+				      <LoadsLibraries>false</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="StrategicView_Properties"/>
+				      <ArtDefDependencyPaths>
+				      	<Element text="Civilizations.artdef"/>
+				      	<Element text="Cultures.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies/>
+				      <LoadsLibraries>false</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="StrategicView_Route"/>
+				      <ArtDefDependencyPaths>
+				      	<Element text="Civilizations.artdef"/>
+				      	<Element text="Cultures.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies>
+				        <Element text="StrategicView_Route"/>
+				        <Element text="StrategicView_DirectedAsset"/>
+				      </LibraryDependencies>
+				      <LoadsLibraries>true</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="StrategicView_Sprite"/>
+				      <ArtDefDependencyPaths>
+				      	<Element text="Civilizations.artdef"/>
+				      	<Element text="Cultures.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies>
+				        <Element text="StrategicView_Sprite"/>
+				        <Element text="StrategicView_DirectedAsset"/>
+				      </LibraryDependencies>
+				      <LoadsLibraries>true</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="StrategicView_TerrainType"/>
+				      <ArtDefDependencyPaths>
+				      	<Element text="Civilizations.artdef"/>
+				      	<Element text="Cultures.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies>
+				        <Element text="StrategicView_TerrainBlend"/>
+				        <Element text="StrategicView_TerrainBlendCorners"/>
+				        <Element text="StrategicView_TerrainType"/>
+				        <Element text="StrategicView_DirectedAsset"/>
+				      </LibraryDependencies>
+				      <LoadsLibraries>true</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="StrategicView_TerrainBlend"/>
+				      <ArtDefDependencyPaths>
+				      	<Element text="Civilizations.artdef"/>
+				      	<Element text="Cultures.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies>
+				        <Element text="StrategicView_TerrainBlend"/>
+				        <Element text="StrategicView_DirectedAsset"/>
+				      </LibraryDependencies>
+				      <LoadsLibraries>true</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="StrategicView_TerrainBlendCorners"/>
+				      <ArtDefDependencyPaths>
+				      	<Element text="Civilizations.artdef"/>
+				      	<Element text="Cultures.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies>
+				        <Element text="StrategicView_TerrainBlendCorners"/>
+				        <Element text="StrategicView_DirectedAsset"/>
+				      </LibraryDependencies>
+				      <LoadsLibraries>true</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="StrategicView_Translate"/>
+				      <ArtDefDependencyPaths>
+				      	<Element text="Civilizations.artdef"/>
+				      	<Element text="Cultures.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies/>
+				      <LoadsLibraries>false</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="Terrain"/>
+				      <ArtDefDependencyPaths>
+				      	<Element text="Civilizations.artdef"/>
+				      	<Element text="Cultures.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies>
+				        <Element text="TerrainAsset"/>
+				        <Element text="TerrainElement"/>
+				        <Element text="TerrainMaterial"/>
+				      </LibraryDependencies>
+				      <LoadsLibraries>true</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="Terrains"/>
+				      <ArtDefDependencyPaths>
+				      	<Element text="Civilizations.artdef"/>
+				      	<Element text="Cultures.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies/>
+				      <LoadsLibraries>false</LoadsLibraries>
+				    </Element>
+				    <Element>
 				      <ConsumerName text="Units"/>
 				      <ArtDefDependencyPaths>
+				        <Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies>
 				        <Element text="Unit"/>
+				        <Element text="VFX"/>
+				        <Element text="Light"/>
+				      </LibraryDependencies>
+				      <LoadsLibraries>true</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="UnitSimulation"/>
+				      <ArtDefDependencyPaths>
+				      	<Element text="Civilizations.artdef"/>
+				      	<Element text="Cultures.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies/>
+				      <LoadsLibraries>false</LoadsLibraries>
+				    </Element>
+				    <Element>
+				      <ConsumerName text="VFX"/>
+				      <ArtDefDependencyPaths>
+				      	<Element text="Civilizations.artdef"/>
+				      	<Element text="Cultures.artdef"/>
+				      </ArtDefDependencyPaths>
+				      <LibraryDependencies>
+				        <Element text="VFX"/>
+				        <Element text="Light"/>
 				      </LibraryDependencies>
 				      <LoadsLibraries>true</LoadsLibraries>
 				    </Element>
 				    <Element>
 				      <ConsumerName text="WorldView_Translate"/>
 				      <ArtDefDependencyPaths>
+				      	<Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies/>
-				      <LoadsLibraries>true</LoadsLibraries>
+				      <LoadsLibraries>false</LoadsLibraries>
 				    </Element>
 				  </SystemDependencies>
+				  <ArtDefDependencies>
+				    <Element>
+				      <ArtDefPath text="Civilizations.artdef"/>
+				      <ArtDefDependencyPaths/>
+				    </Element>
+				    <Element>
+				      <ArtDefPath text="Cultures.artdef"/>
+				      <ArtDefDependencyPaths/>
+				    </Element>
+				    <Element>
+				      <ArtDefPath text="Leaders.artdef"/>
+				      <ArtDefDependencyPaths/>
+				    </Element>
+				    <Element>
+				      <ArtDefPath text="FallbackLeaders.artdef"/>
+				      <ArtDefDependencyPaths/>
+				    </Element>
+				  </ArtDefDependencies>
 				</AssetObjects..GameDependencyData>
 				""", '$', '$')
 				.add("modName", fileHeader.modName)

@@ -115,6 +115,7 @@ public class ModInfoGenerator extends BlitzFileGenerator {
 					<File>Icons.sql</File>
 					<File>Leader.sql</File>
 					<File>LeaderText.sql</File>
+					<File>ArtDefs/Civilizations.artdef</File>
 					<File>ArtDefs/Cultures.artdef</File>
 					<File>ArtDefs/Landmarks_DLC_Indones_Khmer.artdef</File>
 					<File>ArtDefs/Landmarks_DLC_Maced_Pers.artdef</File>
