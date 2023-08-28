@@ -26,7 +26,7 @@ public class ModdedCivInfo {
 	}
 
 	public String getCivDBName() {
-		return "LEADER_IMP_" + ModHeaderGenerator.buildName(selectedCards).toUpperCase();
+		return "CIVILIZATION_IMP_" + ModHeaderGenerator.buildName(selectedCards).toUpperCase();
 	}
 
 }

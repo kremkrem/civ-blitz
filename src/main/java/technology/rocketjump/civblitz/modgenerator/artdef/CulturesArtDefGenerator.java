@@ -9,7 +9,7 @@ import technology.rocketjump.civblitz.modgenerator.model.ModdedCivInfo;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Component
@@ -60,16 +60,19 @@ public class CulturesArtDefGenerator extends ArtDefGenerator {
 	}
 
 	private List<XmlNode> civsAsArtDefReference(List<ModdedCivInfo> civs) {
+		AtomicInteger i = new AtomicInteger(1);
 		return civs.stream()
 				.map(civ -> (XmlNode) (new ArtDefReferenceValue(
-						"Civ" + randStr(),
+						"Civilizations" + indexStr(i.getAndIncrement()),
 						civ.getCivDBName(),
 						"Civilization",
-						"Civilizations.artdef")))
+						"Civilizations.artdef",
+						true,
+						"Civilizations")))
 				.toList();
 	}
 
-	private static String randStr() {
-		return UUID.randomUUID().toString().replaceAll("-","");
+	private static String indexStr(int index) {
+		return String.format("%03d", index);
 	}
 }
