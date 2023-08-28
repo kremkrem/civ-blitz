@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import technology.rocketjump.civblitz.model.LeaderArtData;
 import technology.rocketjump.civblitz.model.SourceDataRepo;
+import technology.rocketjump.civblitz.modgenerator.artdef.xml.BLPEntryValue;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -26,12 +27,24 @@ public class LeaderArtDefsParser {
 			CSVParser parsed = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(input);
 			for (CSVRecord record : parsed.getRecords()) {
 				sourceDataRepo.leaderArtDataByLeaderType.put(record.get("LeaderType"),
-						new LeaderArtData(
-								new LeaderArtData.BLPEntry(record.get("LeaderEntryName"), record.get("LeaderXLPPath"),
-										record.get("LeaderBLPPackage")),
-								new LeaderArtData.BLPEntry(record.get("LightrigEntryName"), record.get(
-										"LightrigXLPPath"), ""),
-								new LeaderArtData.BLPEntry(record.get("ColorKeyEntryName"), "", ""),
+						new LeaderArtData(new BLPEntryValue("Leader_BLP_Entry",
+								record.get("LeaderEntryName"),
+								"Leader",
+								record.get("LeaderXLPPath"),
+								record.get("LeaderBLPPackage"),
+								"Leader"),
+								new BLPEntryValue("Leader_Lightrig_BLP_Entry",
+										record.get("LightrigEntryName"),
+										"LeaderLighting",
+										record.get("LightrigXLPPath"),
+										"leaders/light_rigs",
+										"LeaderLighting"),
+								new BLPEntryValue("Leader_ColorKey_BLP_Entry",
+										record.get("ColorKeyEntryName"),
+										"ColorKey",
+										"ColorKeys.xlp",
+										"ColorKeys",
+										"ColorKey"),
 								record.get("Audio")));
 			}
 		}

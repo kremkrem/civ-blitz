@@ -24,6 +24,12 @@ public class BLPEntryValue extends AssetObject {
 		this.libraryName = libraryName;
 	}
 
+	public BLPEntryValue(String paramName,
+						 String xlpClass,
+						 String libraryName) {
+		this(paramName, "", xlpClass, "", "", libraryName);
+	}
+
 	@Override
 	protected List<XmlNode> getEntries() {
 		return List.of(
