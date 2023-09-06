@@ -20,10 +20,14 @@ public class AllArtDefGenerators {
 	@Autowired
 	private CivilizationsArtDefGenerator civilizationsArtDefGenerator;
 
+	@Autowired
+	private LandmarksArtDefGenerator landmarksArtDefGenerator;
+
 	public List<BlitzFileGenerator> getAll() {
 		return List.of(leadersArtDefGenerator,
 				fallbackLeadersArtDefGenerator,
 				culturesArtDefGenerator,
-				civilizationsArtDefGenerator);
+				civilizationsArtDefGenerator,
+				landmarksArtDefGenerator);
 	}
 }

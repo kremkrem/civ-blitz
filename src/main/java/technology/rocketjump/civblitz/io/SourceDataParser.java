@@ -32,6 +32,7 @@ public class SourceDataParser {
 							LeaderArtDefsParser leaderArtDefsParser,
 							FallbackLeadersArtDefsParser fallbackLeadersArtDefsParser,
 							CivilizationCulturesParser civilizationCulturesParser,
+							LandmarksArtDefsParser landmarksArtDefsParser,
 							ActOfGodCardsParser actOfGodCardsParser,
 							@Qualifier("leaderTraits") String leaderTraitsContent,
 							@Qualifier("civTraits") String civTraitsContent,
@@ -48,6 +49,7 @@ public class SourceDataParser {
 							@Qualifier("LeaderArtDefs") String leaderArtDefsContent,
 							@Qualifier("FallbackLeaderArtDefs") String fallbackLeaderArtDefsContent,
 							@Qualifier("CivilizationsCulture") String civilizationsCultureContent,
+							@Qualifier("LandmarksArtDefs") String landmarksArtDefs,
 							@Value("#{new Boolean('${multiplayer-flag}')}") boolean multiplayerFlag) throws IOException {
 		leaderTraitsParser.parse(leaderTraitsContent);
 		civTraitsParser.parse(civTraitsContent);
@@ -63,6 +65,7 @@ public class SourceDataParser {
 		leaderArtDefsParser.parse(leaderArtDefsContent);
 		fallbackLeadersArtDefsParser.parse(fallbackLeaderArtDefsContent);
 		civilizationCulturesParser.parse(civilizationsCultureContent);
+		landmarksArtDefsParser.parse(landmarksArtDefs);
 
 		if (multiplayerFlag) {
 			objectiveDefinitionParser.readFromGoogleSheet();

@@ -3,8 +3,6 @@ package technology.rocketjump.civblitz.modgenerator;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import technology.rocketjump.civblitz.infrastructurefix.InfrastructureFixFileProvider;
-import technology.rocketjump.civblitz.infrastructurefix.StaticModFile;
 import technology.rocketjump.civblitz.model.CardCategory;
 import technology.rocketjump.civblitz.modgenerator.artdef.AllArtDefGenerators;
 import technology.rocketjump.civblitz.modgenerator.dep.ArtDepGenerator;
@@ -24,7 +22,6 @@ import java.util.zip.ZipOutputStream;
 public class CompleteModGenerator {
 
 	private final ModHeaderGenerator modHeaderGenerator;
-	private final InfrastructureFixFileProvider infrastructureFixFileProvider;
 
 	private final List<BlitzFileGenerator> fileGeneratorList = new ArrayList<>();
 
@@ -34,10 +31,8 @@ public class CompleteModGenerator {
 								ColorsSqlGenerator colorsSqlGenerator, ConfigurationSqlGenerator configurationSqlGenerator,
 								GeographySqlGenerator geographySqlGenerator, IconsSqlGenerator iconsSqlGenerator,
 								LeaderSqlGenerator leaderSqlGenerator, LeaderTextSqlGenerator leaderTextSqlGenerator,
-								ArtDepGenerator artDepGenerator, AllArtDefGenerators allArtDefGenerators,
-								InfrastructureFixFileProvider infrastructureFixFileProvider) {
+								ArtDepGenerator artDepGenerator, AllArtDefGenerators allArtDefGenerators) {
 		this.modHeaderGenerator = modHeaderGenerator;
-		this.infrastructureFixFileProvider = infrastructureFixFileProvider;
 
 		fileGeneratorList.add(civilizationSqlGenerator);
 		fileGeneratorList.add(civTraitsSqlGenerator);
@@ -75,11 +70,6 @@ public class CompleteModGenerator {
 			zipOutputStream.putNextEntry(new ZipEntry(generator.getFilename()));
 			zipOutputStream.write(contentBytes, 0, contentBytes.length);
 		}
-		for (StaticModFile fixFile : infrastructureFixFileProvider.getAll()) {
-			byte[] contentBytes = fixFile.getFileContent().getBytes();
-			zipOutputStream.putNextEntry(new ZipEntry(fixFile.getFilename()));
-			zipOutputStream.write(contentBytes, 0, contentBytes.length);
-		}
 
 		zipOutputStream.finish();
 		zipOutputStream.flush();
@@ -108,11 +98,6 @@ public class CompleteModGenerator {
 		for (BlitzFileGenerator generator : fileGeneratorList) {
 			byte[] contentBytes = generator.getFileContents(header, civInfo).getBytes();
 			zipOutputStream.putNextEntry(new ZipEntry(generator.getFilename()));
-			zipOutputStream.write(contentBytes, 0, contentBytes.length);
-		}
-		for (StaticModFile fixFile : infrastructureFixFileProvider.getAll()) {
-			byte[] contentBytes = fixFile.getFileContent().getBytes();
-			zipOutputStream.putNextEntry(new ZipEntry(fixFile.getFilename()));
 			zipOutputStream.write(contentBytes, 0, contentBytes.length);
 		}
 

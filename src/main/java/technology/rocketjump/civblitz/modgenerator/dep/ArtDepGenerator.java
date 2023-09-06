@@ -30,6 +30,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <ArtDefDependencyPaths>
 				      	<Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
+				      	<Element text="Landmarks.artdef"/>
 				        <Element text="Leaders.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies/>
@@ -57,6 +58,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <ArtDefDependencyPaths>
 				      	<Element text="Civilizations.artdef"/>
 				        <Element text="Cultures.artdef"/>
+				      	<Element text="Landmarks.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies>
 				        <Element text="TileBase/>
@@ -69,6 +71,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <ArtDefDependencyPaths>
 				      	<Element text="Civilizations.artdef"/>
 				        <Element text="Cultures.artdef"/>
+				      	<Element text="Landmarks.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies/>
 				      <LoadsLibraries>false</LoadsLibraries>
@@ -78,6 +81,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <ArtDefDependencyPaths>
 				      	<Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
+				      	<Element text="Landmarks.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies/>
 				      <LoadsLibraries>false</LoadsLibraries>
@@ -87,6 +91,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <ArtDefDependencyPaths>
 				      	<Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
+				      	<Element text="Landmarks.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies/>
 				      <LoadsLibraries>false</LoadsLibraries>
@@ -96,6 +101,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <ArtDefDependencyPaths>
 				        <Element text="Civilizations.artdef"/>
 				        <Element text="Cultures.artdef"/>
+				      	<Element text="Landmarks.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies>
 				        <Element text="CityBuildings"/>
@@ -140,6 +146,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <ArtDefDependencyPaths>
 				      	<Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
+				      	<Element text="Landmarks.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies/>
 				      <LoadsLibraries>false</LoadsLibraries>
@@ -149,6 +156,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <ArtDefDependencyPaths>
 				      	<Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
+				      	<Element text="Landmarks.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies/>
 				      <LoadsLibraries>false</LoadsLibraries>
@@ -158,6 +166,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <ArtDefDependencyPaths>
 				      	<Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
+				      	<Element text="Landmarks.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies>
 				        <Element text="StrategicView_Route"/>
@@ -170,6 +179,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <ArtDefDependencyPaths>
 				      	<Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
+				      	<Element text="Landmarks.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies>
 				        <Element text="StrategicView_Sprite"/>
@@ -182,6 +192,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <ArtDefDependencyPaths>
 				      	<Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
+				      	<Element text="Landmarks.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies>
 				        <Element text="StrategicView_TerrainBlend"/>
@@ -196,6 +207,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <ArtDefDependencyPaths>
 				      	<Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
+				      	<Element text="Landmarks.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies>
 				        <Element text="StrategicView_TerrainBlend"/>
@@ -208,6 +220,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <ArtDefDependencyPaths>
 				      	<Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
+				      	<Element text="Landmarks.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies>
 				        <Element text="StrategicView_TerrainBlendCorners"/>
@@ -220,6 +233,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <ArtDefDependencyPaths>
 				      	<Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
+				      	<Element text="Landmarks.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies/>
 				      <LoadsLibraries>false</LoadsLibraries>
@@ -229,6 +243,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <ArtDefDependencyPaths>
 				      	<Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
+				      	<Element text="Landmarks.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies>
 				        <Element text="TerrainAsset"/>
@@ -242,6 +257,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <ArtDefDependencyPaths>
 				      	<Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
+				      	<Element text="Landmarks.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies/>
 				      <LoadsLibraries>false</LoadsLibraries>
@@ -251,6 +267,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <ArtDefDependencyPaths>
 				        <Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
+				      	<Element text="Landmarks.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies>
 				        <Element text="Unit"/>
@@ -264,6 +281,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <ArtDefDependencyPaths>
 				      	<Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
+				      	<Element text="Landmarks.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies/>
 				      <LoadsLibraries>false</LoadsLibraries>
@@ -273,6 +291,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <ArtDefDependencyPaths>
 				      	<Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
+				      	<Element text="Landmarks.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies>
 				        <Element text="VFX"/>
@@ -285,6 +304,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      <ArtDefDependencyPaths>
 				      	<Element text="Civilizations.artdef"/>
 				      	<Element text="Cultures.artdef"/>
+				      	<Element text="Landmarks.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies/>
 				      <LoadsLibraries>false</LoadsLibraries>
@@ -298,6 +318,14 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				    <Element>
 				      <ArtDefPath text="Cultures.artdef"/>
 				      <ArtDefDependencyPaths/>
+				    </Element>
+				    <Element>
+				      <ArtDefPath text="Landmarks.artdef"/>
+				      <ArtDefDependencyPaths>
+				        <Element text="Civilizations.artdef"/>
+				        <Element text="Cultures.artdef"/>
+				        <Element text="Landmarks.artdef"/>
+				      </ArtDefDependencyPaths>
 				    </Element>
 				    <Element>
 				      <ArtDefPath text="Leaders.artdef"/>

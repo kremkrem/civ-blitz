@@ -216,4 +216,16 @@ public class ResourceFiles {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Value("classpath:csv/LandmarksArtDefs.csv")
+	private Resource landmarksArtDefsFile;
+
+	@Bean(name = "LandmarksArtDefs")
+	public String LandmarksArtDefs() {
+		try (InputStream is = landmarksArtDefsFile.getInputStream()) {
+			return StreamUtils.copyToString(is, StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

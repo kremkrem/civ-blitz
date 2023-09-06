@@ -27,6 +27,10 @@ public class ArtDefReferenceValue extends AssetObject {
 		this(paramName, elementName, rootCollectionName, artDefPath, true, "");
 	}
 
+	public ArtDefReferenceValue(String paramName) {
+		this(paramName, "", "", "");
+	}
+
 	@Override
 	protected List<XmlNode> getEntries() {
 		return List.of(

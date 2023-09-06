@@ -5,7 +5,7 @@ import org.w3c.dom.Element;
 
 import java.util.List;
 
-abstract class AssetObject implements XmlNode {
+public abstract class AssetObject implements XmlNode {
 
 	public final String paramName;
 

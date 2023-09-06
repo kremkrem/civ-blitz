@@ -38,6 +38,7 @@ public class SourceDataRepo {
 	public final Map<String, List<String>> civilizationToCultures = new HashMap<>();
 	public final Map<String, List<String>> civilizationToUnitCultures = new HashMap<>();
 	public final Map<String, String> civilizationToCivilizationArtdef = new HashMap<>();
+	public final List<LandmarkData> landmarkArtdefs = new ArrayList<>();
 
 	@Autowired
 	public SourceDataRepo() {
