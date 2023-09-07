@@ -2,6 +2,8 @@ package technology.rocketjump.civblitz.modgenerator;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import technology.rocketjump.civblitz.model.CardCategory;
 import technology.rocketjump.civblitz.modgenerator.artdef.AllArtDefGenerators;
@@ -13,6 +15,7 @@ import technology.rocketjump.civblitz.modgenerator.sql.*;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -22,16 +25,26 @@ import java.util.zip.ZipOutputStream;
 public class CompleteModGenerator {
 
 	private final ModHeaderGenerator modHeaderGenerator;
+	private final ResourceLoader resourceLoader;
 
 	private final List<BlitzFileGenerator> fileGeneratorList = new ArrayList<>();
+	private static final List<String> staticFileList = List.of("lua/LeaderScene_layeredBg.lua");
 
 	@Autowired
-	public CompleteModGenerator(ModHeaderGenerator modHeaderGenerator, ModInfoGenerator modInfoGenerator,
-								CivilizationSqlGenerator civilizationSqlGenerator, CivTraitsSqlGenerator civTraitsSqlGenerator,
-								ColorsSqlGenerator colorsSqlGenerator, ConfigurationSqlGenerator configurationSqlGenerator,
-								GeographySqlGenerator geographySqlGenerator, IconsSqlGenerator iconsSqlGenerator,
-								LeaderSqlGenerator leaderSqlGenerator, LeaderTextSqlGenerator leaderTextSqlGenerator,
-								ArtDepGenerator artDepGenerator, AllArtDefGenerators allArtDefGenerators) {
+	public CompleteModGenerator(ResourceLoader resourceLoader,
+								ModHeaderGenerator modHeaderGenerator,
+								ModInfoGenerator modInfoGenerator,
+								CivilizationSqlGenerator civilizationSqlGenerator,
+								CivTraitsSqlGenerator civTraitsSqlGenerator,
+								ColorsSqlGenerator colorsSqlGenerator,
+								ConfigurationSqlGenerator configurationSqlGenerator,
+								GeographySqlGenerator geographySqlGenerator,
+								IconsSqlGenerator iconsSqlGenerator,
+								LeaderSqlGenerator leaderSqlGenerator,
+								LeaderTextSqlGenerator leaderTextSqlGenerator,
+								ArtDepGenerator artDepGenerator,
+								AllArtDefGenerators allArtDefGenerators) {
+		this.resourceLoader = resourceLoader;
 		this.modHeaderGenerator = modHeaderGenerator;
 
 		fileGeneratorList.add(civilizationSqlGenerator);
@@ -54,7 +67,8 @@ public class CompleteModGenerator {
 			}
 			for (CardCategory cardCategory : CardCategory.mainCategories) {
 				if (civInfo.selectedCards.stream().noneMatch(c -> c.getCardCategory().equals(cardCategory))) {
-					throw new IllegalArgumentException(getClass().getSimpleName() + " must be passed one card in each category");
+					throw new IllegalArgumentException(
+							getClass().getSimpleName() + " must be passed one card in each category");
 				}
 			}
 		}
@@ -81,11 +95,13 @@ public class CompleteModGenerator {
 
 	public byte[] generateMod(ModdedCivInfo civInfo) throws IOException {
 		if (civInfo.selectedCards.size() < 4) {
-			throw new IllegalArgumentException(getClass().getSimpleName() + " must be passed a map of at least 4 cards");
+			throw new IllegalArgumentException(
+					getClass().getSimpleName() + " must be passed a map of at least 4 cards");
 		}
 		for (CardCategory cardCategory : CardCategory.mainCategories) {
 			if (civInfo.selectedCards.stream().noneMatch(c -> c.getCardCategory().equals(cardCategory))) {
-				throw new IllegalArgumentException(getClass().getSimpleName() + " must be passed one card in each category");
+				throw new IllegalArgumentException(
+						getClass().getSimpleName() + " must be passed one card in each category");
 			}
 		}
 
@@ -99,6 +115,14 @@ public class CompleteModGenerator {
 			byte[] contentBytes = generator.getFileContents(header, civInfo).getBytes();
 			zipOutputStream.putNextEntry(new ZipEntry(generator.getFilename()));
 			zipOutputStream.write(contentBytes, 0, contentBytes.length);
+		}
+		for (String filename : staticFileList) {
+			Resource staticFile = resourceLoader.getResource("classpath:" + filename);
+			try (InputStream is = staticFile.getInputStream()) {
+				byte[] contentBytes = is.readAllBytes();
+				zipOutputStream.putNextEntry(new ZipEntry(filename));
+				zipOutputStream.write(contentBytes, 0, contentBytes.length);
+			}
 		}
 
 		zipOutputStream.finish();

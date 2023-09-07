@@ -85,6 +85,15 @@ public class ModInfoGenerator extends BlitzFileGenerator {
 					  <File>Geography.sql</File>
 					  <File>Leader.sql</File>
 					</UpdateDatabase>
+					<ReplaceUIScript id="LeaderScene_layeredBg">
+					  <Properties>
+					    <LuaContext>LeaderScene</LuaContext>
+					    <LuaReplace>lua/LeaderScene_layeredBg.lua</LuaReplace>
+					  </Properties>
+					</ReplaceUIScript>
+					<ImportFiles id="ImportUI">
+					  <File>lua/LeaderScene_layeredBg.lua</File>
+					</ImportFiles>
 					<UpdateColors id="Colors">
 					  <File>Colors.sql</File>
 					</UpdateColors>
@@ -124,6 +133,7 @@ public class ModInfoGenerator extends BlitzFileGenerator {
 					<File>DLC_Maced_Pers.dep</File>
 					<File>DLC_Nubia_Amanit.dep</File>
 					<File>Exp1.dep</File>
+					<File>lua/LeaderScene_layeredBg.lua</File>
 				  </Files>
 				</Mod>""";
 	}

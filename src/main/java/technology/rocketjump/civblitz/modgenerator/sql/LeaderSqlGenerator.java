@@ -27,39 +27,33 @@ public class LeaderSqlGenerator extends BlitzFileGenerator {
 
 		// TODO replace leaders insert with VALUES statement
 
-		sqlBuilder.append("""
+		sqlBuilder.append(ST.format("""
 
-				INSERT INTO Types
-				(Type, Kind)
-				VALUES\t('LEADER_IMP_""").append(modName).append("""
-				', 'KIND_LEADER');
+				INSERT INTO Types (Type, Kind)
+				VALUES('LEADER_IMP_<%1>', 'KIND_LEADER');
 
 				INSERT INTO Leaders
 				(LeaderType, Name, InheritFrom, SceneLayers, Sex, SameSexPercentage)
-				SELECT 'LEADER_IMP_""").append(modName).append("', 'LOC_LEADER_IMP_").append(modName).append("""
-				', Leaders.InheritFrom , Leaders.SceneLayers , Leaders.Sex, Leaders.SameSexPercentage
+				SELECT 'LEADER_IMP_<%1>', 'LOC_LEADER_IMP_<%1>', Leaders.InheritFrom, Leaders.SceneLayers, Leaders.Sex, Leaders.SameSexPercentage
 				FROM Leaders
-				WHERE Leaders.LeaderType = '""").append(leaderType).append("""
-				';
+				WHERE Leaders.LeaderType = '<%2>';
 
 				INSERT INTO DuplicateLeaders
 				(LeaderType, OtherLeaderType)
-				VALUES ('""").append(leaderType).append("', 'LEADER_IMP_").append(modName).append("""
-				');
+				VALUES ('<%2>', 'LEADER_IMP_<%1>');
 
 				--------------------------------------------------------------------------------------------------------------------------
 				-- DiplomacyInfo
 				--------------------------------------------------------------------------------------------------------------------------
 				INSERT INTO DiplomacyInfo (Type, BackgroundImage)
-				SELECT 'LEADER_IMP_""").append(modName).append("""
-				', DiplomacyInfo.BackgroundImage
-				FROM DiplomacyInfo
-				WHERE DiplomacyInfo.Type = '""").append(leaderType).append("""
-				';
+				VALUES ('LEADER_IMP_<%1>', '<%3>');
 				--------------------------------------------------------------------------------------------------------------------------
 				-- LeaderTraits
 				--------------------------------------------------------------------------------------------------------------------------
-				""");
+				""",
+				modName,
+				civInfo.getCard(CardCategory.LeaderAbility).getLeaderType().orElseThrow(),
+				civInfo.getCard(CardCategory.LeaderAbility).getLeaderType().orElseThrow().replace("LEADER_", "")));
 
 		if (leaderCard.getPatchSQL() != null && leaderCard.getPatchSQL().needsDedicatedAbility()) {
 			sqlBuilder.append(ST.format("""
