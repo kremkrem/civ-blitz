@@ -30,6 +30,7 @@ public class SourceDataRepo {
 	public final Map<String, String> portraitsByLeaderType = new HashMap<>();
 	public final Map<String, String> portraitBackgroundsByLeaderType = new HashMap<>();
 	public final Map<String, String> capitalNamesByCivType = new HashMap<>();
+	public final Map<String, List<String>> allLeadersByCivType = new HashMap<>();
 
 	public final Map<String, CSVRecord> civilizationCsvRecordsByCivType = new HashMap<>();
 	public final Map<String, Card> civAbilityCardByFriendlyName = new HashMap<>();

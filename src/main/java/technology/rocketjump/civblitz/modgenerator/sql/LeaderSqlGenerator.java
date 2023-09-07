@@ -5,6 +5,7 @@ import org.stringtemplate.v4.ST;
 import technology.rocketjump.civblitz.model.Card;
 import technology.rocketjump.civblitz.model.CardCategory;
 import technology.rocketjump.civblitz.model.Patch;
+import technology.rocketjump.civblitz.model.SourceDataRepo;
 import technology.rocketjump.civblitz.modgenerator.BlitzFileGenerator;
 import technology.rocketjump.civblitz.modgenerator.ModHeaderGenerator;
 import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
@@ -16,6 +17,12 @@ import java.util.List;
 @Component
 public class LeaderSqlGenerator extends BlitzFileGenerator {
 
+	private final SourceDataRepo sourceDataRepo;
+
+	public LeaderSqlGenerator(SourceDataRepo sourceDataRepo) {
+		this.sourceDataRepo = sourceDataRepo;
+	}
+
 	@Override
 	public String getFileContents(ModHeader modHeader, ModdedCivInfo civInfo) {
 		StringBuilder sqlBuilder = new StringBuilder();
@@ -24,6 +31,12 @@ public class LeaderSqlGenerator extends BlitzFileGenerator {
 
 		Card leaderCard = civInfo.getCard(CardCategory.LeaderAbility);
 		String leaderType = leaderCard.getLeaderType().orElseThrow();
+
+		List<String> bgLeaders =
+				sourceDataRepo.allLeadersByCivType.get(civInfo.getCard(CardCategory.CivilizationAbility)
+						.getCivilizationType());
+		String bgLeaderType = (bgLeaders == null) ? leaderType : bgLeaders.get(modName.hashCode() % bgLeaders.size())
+				.replace("LEADER_", "");
 
 		// TODO replace leaders insert with VALUES statement
 
@@ -50,10 +63,7 @@ public class LeaderSqlGenerator extends BlitzFileGenerator {
 				--------------------------------------------------------------------------------------------------------------------------
 				-- LeaderTraits
 				--------------------------------------------------------------------------------------------------------------------------
-				""",
-				modName,
-				civInfo.getCard(CardCategory.LeaderAbility).getLeaderType().orElseThrow(),
-				civInfo.getCard(CardCategory.LeaderAbility).getLeaderType().orElseThrow().replace("LEADER_", "")));
+				""", modName, leaderType, bgLeaderType));
 
 		if (leaderCard.getPatchSQL() != null && leaderCard.getPatchSQL().needsDedicatedAbility()) {
 			sqlBuilder.append(ST.format("""

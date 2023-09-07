@@ -10,15 +10,16 @@ import technology.rocketjump.civblitz.model.SourceDataRepo;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
 
 @Component
 public class CivilizationLeadersCsvParser {
 
-	private final SourceDataRepo sourceDataRepe;
+	private final SourceDataRepo sourceDataRepo;
 
 	@Autowired
-	public CivilizationLeadersCsvParser(SourceDataRepo sourceDataRepe) {
-		this.sourceDataRepe = sourceDataRepe;
+	public CivilizationLeadersCsvParser(SourceDataRepo sourceDataRepo) {
+		this.sourceDataRepo = sourceDataRepo;
 	}
 
 	public void parse(String ciCsvContent) throws IOException {
@@ -28,10 +29,18 @@ public class CivilizationLeadersCsvParser {
 					.parse(input);
 
 			for (CSVRecord record : parsed.getRecords()) {
+				String leaderType = record.get("LeaderType");
 				String civType = record.get("CivilizationType");
 				String capitalName = record.get("CapitalName");
 
-				sourceDataRepe.capitalNamesByCivType.put(civType, capitalName);
+				sourceDataRepo.capitalNamesByCivType.put(civType, capitalName);
+				sourceDataRepo.allLeadersByCivType.compute(civType, (k, l) -> {
+					if (l == null) {
+						l = new ArrayList<>();
+					}
+					l.add(leaderType);
+					return l;
+				});
 			}
 		}
 	}
