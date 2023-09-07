@@ -38,7 +38,8 @@ public class LandmarksArtDefsParser {
 									record.get("BLPPackage"),
 									"TileBase"),
 							record.get("EntryName"),
-							Boolean.parseBoolean(record.get("Flatten"))))
+							Boolean.parseBoolean(record.get("Flatten")),
+							record.get("TraitType")))
 					.toList());
 		}
 	}

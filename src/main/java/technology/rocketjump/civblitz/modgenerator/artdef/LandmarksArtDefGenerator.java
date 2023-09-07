@@ -2,6 +2,7 @@ package technology.rocketjump.civblitz.modgenerator.artdef;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import technology.rocketjump.civblitz.model.Card;
 import technology.rocketjump.civblitz.model.LandmarkData;
 import technology.rocketjump.civblitz.model.SourceDataRepo;
 import technology.rocketjump.civblitz.modgenerator.artdef.xml.*;
@@ -10,6 +11,7 @@ import technology.rocketjump.civblitz.modgenerator.model.ModdedCivInfo;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -35,9 +37,13 @@ public class LandmarksArtDefGenerator extends ArtDefGenerator {
 
 	@Override
 	protected List<Collection> getRootCollections(ModHeader modHeader, List<ModdedCivInfo> civs) {
+		Set<String> traitTypes =
+				civs.stream()
+						.flatMap(civ -> civ.selectedCards.stream().map(Card::getTraitType))
+						.collect(Collectors.toSet());
 		return List.of(
-				new Collection("Districts", districts()),
-				new Collection("Landmarks", landmarks()),
+				new Collection("Districts", districts(traitTypes)),
+				new Collection("Landmarks", landmarks(traitTypes)),
 				new Collection("ResourceTags"),
 				new Collection("Globals"),
 				new Collection("TerrainTags"));
@@ -75,9 +81,10 @@ public class LandmarksArtDefGenerator extends ArtDefGenerator {
 	private static final ArtDefReferenceValue anyAppeal =
 			new ArtDefReferenceValue("Tag_Appeal", "ANY", "AppealTags", "Appeal.artdef", true, "Appeal");
 
-	private List<CivElement> districts() {
+	private List<CivElement> districts(Set<String> enabledTraitTypes) {
 		Map<String, List<LandmarkData>> districtToEntries = sourceDataRepo.landmarkArtdefs.stream()
 				.filter(landmark -> !"Eras".equals(landmark.collection()))
+				.filter(landmark -> enabledTraitTypes.contains(landmark.traitType()))
 				.collect(Collectors.groupingBy(LandmarkData::name));
 		return districtToEntries.entrySet().stream().map(entry -> new CivElement(
 				entry.getKey(),
@@ -131,9 +138,10 @@ public class LandmarksArtDefGenerator extends ArtDefGenerator {
 								.toList())))).toList();
 	}
 
-	private List<CivElement> landmarks() {
+	private List<CivElement> landmarks(Set<String> enabledTraitTypes) {
 		Map<String, List<LandmarkData>> grouped = sourceDataRepo.landmarkArtdefs.stream()
 				.filter(landmark -> "Eras".equals(landmark.collection()))
+				.filter(landmark -> enabledTraitTypes.contains(landmark.traitType()))
 				.collect(Collectors.groupingBy(LandmarkData::name));
 		return grouped.entrySet().stream().map(entry -> new CivElement(
 				entry.getKey(),

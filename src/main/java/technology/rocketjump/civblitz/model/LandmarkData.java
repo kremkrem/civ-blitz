@@ -8,5 +8,6 @@ public record LandmarkData(String collection,
 						   String era,
 						   BLPEntryValue asset,
 						   String entryName,
-						   boolean flatten) {
+						   boolean flatten,
+						   String traitType) {
 }
