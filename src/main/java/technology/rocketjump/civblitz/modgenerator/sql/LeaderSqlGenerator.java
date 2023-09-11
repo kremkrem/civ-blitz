@@ -35,8 +35,9 @@ public class LeaderSqlGenerator extends BlitzFileGenerator {
 		List<String> bgLeaders =
 				sourceDataRepo.allLeadersByCivType.get(civInfo.getCard(CardCategory.CivilizationAbility)
 						.getCivilizationType());
-		String bgLeaderType = (bgLeaders == null) ? leaderType : bgLeaders.get(modName.hashCode() % bgLeaders.size())
-				.replace("LEADER_", "");
+		String bgLeaderType =
+				(bgLeaders == null) ? leaderType : bgLeaders.get(Math.abs(modName.hashCode()) % bgLeaders.size())
+						.replace("LEADER_", "");
 
 		// TODO replace leaders insert with VALUES statement
 
