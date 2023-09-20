@@ -76,11 +76,15 @@ public class ObjectivesService {
 		}
 
 		Set<GuildDefinition> selectedGuilds = new HashSet<>();
-		List<GuildDefinition> allGuilds = guildDefinitionRepo.getAll();
+		List<GuildDefinition> guildPool =
+				guildDefinitionRepo.getAll().stream().filter(GuildDefinition::active)
+						.filter(guild -> guild.availableInEra().getOrDefault(match.getStartEra(), true))
+						.toList();
 
 		while (selectedGuilds.size() < NUM_GUILDS_PER_MATCH) {
-			GuildDefinition randomGuild = allGuilds.get(random.nextInt(allGuilds.size()));
-			boolean alreadySelectedThisCategory = selectedGuilds.stream().anyMatch(g -> g.category.equals(randomGuild.category));
+			GuildDefinition randomGuild = guildPool.get(random.nextInt(guildPool.size()));
+			boolean alreadySelectedThisCategory =
+					selectedGuilds.stream().anyMatch(g -> g.category().equals(randomGuild.category()));
 			if (!alreadySelectedThisCategory) {
 				selectedGuilds.add(randomGuild);
 			}
@@ -104,7 +108,8 @@ public class ObjectivesService {
 		objectivesRepo.update(secretObjective);
 	}
 
-	private List<ObjectiveDefinition> pickPublicObjectives(List<ObjectiveDefinition> allPublicObjectives, StartEra startEra) {
+	private List<ObjectiveDefinition> pickPublicObjectives(List<ObjectiveDefinition> allPublicObjectives,
+														   StartEra startEra) {
 		Set<ObjectiveDefinition> selectedObjectives = new HashSet<>();
 
 		pickObjective(1, selectedObjectives, allPublicObjectives, startEra);
@@ -116,7 +121,8 @@ public class ObjectivesService {
 		pickObjective(3, selectedObjectives, allPublicObjectives, startEra);
 
 		long numMilitaryObjectives = selectedObjectives.stream().filter(o -> o.military).count();
-		if (numMilitaryObjectives < MINIMUM_MILITARY_PUBLIC_OBJECTIVES || numMilitaryObjectives > MAXIMUM_MILITARY_PUBLIC_OBJECTIVES) {
+		if (numMilitaryObjectives < MINIMUM_MILITARY_PUBLIC_OBJECTIVES ||
+				numMilitaryObjectives > MAXIMUM_MILITARY_PUBLIC_OBJECTIVES) {
 			// just select again until we get it right
 			return pickPublicObjectives(allPublicObjectives, startEra);
 		} else {
@@ -124,13 +130,16 @@ public class ObjectivesService {
 		}
 	}
 
-	private void pickObjective(Integer requiredNumStars, Set<ObjectiveDefinition> selectedObjectives, List<ObjectiveDefinition> objectivesToPickFrom, StartEra startEra) {
+	private void pickObjective(Integer requiredNumStars,
+							   Set<ObjectiveDefinition> selectedObjectives,
+							   List<ObjectiveDefinition> objectivesToPickFrom,
+							   StartEra startEra) {
 		ObjectiveDefinition selectedObjective = null;
 		while (selectedObjective == null) {
 			selectedObjective = objectivesToPickFrom.get(random.nextInt(objectivesToPickFrom.size()));
 			if (selectedObjectives.contains(selectedObjective)) {
 				selectedObjective = null;
-			} else if (requiredNumStars != null && requiredNumStars != selectedObjective.getStars(startEra)) {
+			} else if (requiredNumStars != null && requiredNumStars.equals(selectedObjective.getStars(startEra))) {
 				selectedObjective = null;
 			}
 		}
@@ -138,7 +147,7 @@ public class ObjectivesService {
 	}
 
 	public void claimObjective(Player player, ObjectiveDefinition objective, MatchWithPlayers match) {
-		if (!match.signups.stream().anyMatch(s -> s.getPlayer().equals(player))) {
+		if (match.signups.stream().noneMatch(s -> s.getPlayer().equals(player))) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Player is not part of the specified match");
 		}
 
@@ -148,8 +157,11 @@ public class ObjectivesService {
 
 		if (objective.objectiveType.equals(SECRET)) {
 			List<SecretObjective> secretObjectives = getSecretObjectives(match.getMatchId(), player);
-			SecretObjective secretObjective = secretObjectives.stream().filter(s -> s.getObjective().equals(objective.objectiveId) && s.getSelected()).findFirst()
-					.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "You do not have that secret objective"));
+			SecretObjective secretObjective = secretObjectives.stream()
+					.filter(s -> s.getObjective().equals(objective.objectiveId) && s.getSelected())
+					.findFirst()
+					.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+							"You do not have that secret objective"));
 
 			if (secretObjective.getClaimed()) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You have already claimed this objective");
@@ -158,9 +170,13 @@ public class ObjectivesService {
 			secretObjective.setClaimed(true);
 			objectivesRepo.update(secretObjective);
 		} else {
-			List<PublicObjectiveWithClaimants> publicObjectives = allObjectivesService.getPublicObjectives(match.getMatchId());
-			PublicObjectiveWithClaimants publicObjective = publicObjectives.stream().filter(p -> p.getObjective().equals(objective.objectiveId)).findAny()
-					.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "That objective is not part of this match"));
+			List<PublicObjectiveWithClaimants> publicObjectives =
+					allObjectivesService.getPublicObjectives(match.getMatchId());
+			PublicObjectiveWithClaimants publicObjective = publicObjectives.stream()
+					.filter(p -> p.getObjective().equals(objective.objectiveId))
+					.findAny()
+					.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+							"That objective is not part of this match"));
 
 			List<String> claimedByPlayerIds = publicObjective.getClaimedByPlayerIds();
 			if (claimedByPlayerIds.contains(player.getPlayerId())) {
@@ -168,7 +184,9 @@ public class ObjectivesService {
 			}
 
 			if (claimedByPlayerIds.size() >= maxClaimsFor(objective, match.getStartEra(), match.signups.size())) {
-				throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "Other players have already claimed this objective the maximum number of times");
+				throw new ResponseStatusException(
+						HttpStatus.PRECONDITION_FAILED,
+						"Other players have already claimed this objective the maximum number of times");
 			}
 
 			objectivesRepo.createClaim(objective, player, match);
@@ -182,8 +200,11 @@ public class ObjectivesService {
 
 		if (objective.objectiveType.equals(SECRET)) {
 			List<SecretObjective> secretObjectives = getSecretObjectives(match.getMatchId(), player);
-			SecretObjective secretObjective = secretObjectives.stream().filter(s -> s.getObjective().equals(objective.objectiveId) && s.getSelected()).findFirst()
-					.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "You do not have that secret objective"));
+			SecretObjective secretObjective = secretObjectives.stream()
+					.filter(s -> s.getObjective().equals(objective.objectiveId) && s.getSelected())
+					.findFirst()
+					.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+							"You do not have that secret objective"));
 			secretObjective.setClaimed(false);
 			objectivesRepo.update(secretObjective);
 		} else {

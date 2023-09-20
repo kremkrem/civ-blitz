@@ -32,7 +32,7 @@ import static technology.rocketjump.civblitz.matches.objectives.ObjectiveDefinit
 public class MatchesController {
 
 	private static final Comparator<ObjectiveResponse> OBJECTIVE_SORT = (o1, o2) -> o1.getNumStars() == o2.getNumStars() ? o1.getObjectiveName().compareTo(o2.getObjectiveName()) : o1.getNumStars() - o2.getNumStars();
-	private static final Comparator<GuildDefinition> GUILD_SORT = Comparator.comparing(o -> o.guildName);
+	private static final Comparator<GuildDefinition> GUILD_SORT = Comparator.comparing(GuildDefinition::guildName);
 	private static final Comparator<SecretObjectiveResponse> SECRET_OBJECTIVE_SORT = (o1, o2) -> o1.getNumStars() == o2.getNumStars() ? o1.getObjectiveName().compareTo(o2.getObjectiveName()) : o1.getNumStars() - o2.getNumStars();
 
 	private final JwtService jwtService;
@@ -45,9 +45,14 @@ public class MatchesController {
 	private final ObjectiveDefinitionRepo objectiveDefinitionRepo;
 
 	@Autowired
-	public MatchesController(JwtService jwtService, PlayerService playerService, MatchService matchService,
-							 ObjectivesService objectivesService, LeaderboardService leaderboardService,
-							 AuditLogger auditLogger, AllObjectivesService allObjectivesService, ObjectiveDefinitionRepo objectiveDefinitionRepo) {
+	public MatchesController(JwtService jwtService,
+							 PlayerService playerService,
+							 MatchService matchService,
+							 ObjectivesService objectivesService,
+							 LeaderboardService leaderboardService,
+							 AuditLogger auditLogger,
+							 AllObjectivesService allObjectivesService,
+							 ObjectiveDefinitionRepo objectiveDefinitionRepo) {
 		this.jwtService = jwtService;
 		this.playerService = playerService;
 		this.matchService = matchService;
@@ -101,7 +106,8 @@ public class MatchesController {
 	@GetMapping("/{matchId}")
 	public DecoratedMatch getMatch(@RequestHeader(value = "Authorization", required = false) String jwToken,
 								   @PathVariable int matchId) {
-		MatchWithPlayers match = matchService.getById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		MatchWithPlayers match =
+				matchService.getById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		if (match.getMatchState().equals(DRAFT)) {
 			// Hide other players' selections in draft stage
 			String currentPlayerId = jwToken == null ? null : jwtService.parse(jwToken).getDiscordId();
@@ -125,7 +131,8 @@ public class MatchesController {
 			if (!player.getIsAdmin()) {
 				throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 			} else {
-				MatchWithPlayers match = matchService.getById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+				MatchWithPlayers match = matchService.getById(matchId)
+						.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 				matchService.delete(match);
 				auditLogger.record(player, "Deleted match: " + match.getMatchName(), match);
 			}
@@ -134,25 +141,27 @@ public class MatchesController {
 
 	@GetMapping("/{matchId}/leaderboard")
 	public Map<String, Integer> getLeaderboard(@PathVariable int matchId) {
-		MatchWithPlayers match = matchService.getById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		MatchWithPlayers match =
+				matchService.getById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		return leaderboardService.getLeaderboard(match);
 	}
 
 	@GetMapping("/{matchId}/public_objectives")
 	public List<ObjectiveResponse> getMatchObjectives(@PathVariable int matchId) {
-		MatchWithPlayers match = matchService.getById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-		return allObjectivesService.getPublicObjectives(matchId).stream()
-				.map((pub) -> {
-					ObjectiveDefinition objective = objectiveDefinitionRepo.getById(pub.getObjective()).orElse(NULL_OBJECTIVE);
-					return new ObjectiveResponse(objective, pub.getClaimedByPlayerIds(), match.getStartEra(), match.signups.size());
-				})
-				.sorted(OBJECTIVE_SORT)
-				.collect(Collectors.toList());
+		MatchWithPlayers match =
+				matchService.getById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		return allObjectivesService.getPublicObjectives(matchId).stream().map((pub) -> {
+			ObjectiveDefinition objective = objectiveDefinitionRepo.getById(pub.getObjective()).orElse(NULL_OBJECTIVE);
+			return new ObjectiveResponse(objective,
+					pub.getClaimedByPlayerIds(),
+					match.getStartEra(),
+					match.signups.size());
+		}).sorted(OBJECTIVE_SORT).collect(Collectors.toList());
 	}
 
 	@GetMapping("/{matchId}/guilds")
 	public List<GuildDefinition> getMatchGuilds(@PathVariable int matchId) {
-		MatchWithPlayers match = matchService.getById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		matchService.getById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		return allObjectivesService.getMatchGuilds(matchId).stream()
 				.sorted(GUILD_SORT)
 				.collect(Collectors.toList());
@@ -166,10 +175,14 @@ public class MatchesController {
 		} else {
 			CivBlitzToken token = jwtService.parse(jwToken);
 			Player player = playerService.getPlayer(token);
-			MatchWithPlayers match = matchService.getById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-			return objectivesService.getSecretObjectives(matchId, player).stream()
-					.map(secretObjective -> new SecretObjectiveResponse(secretObjective, objectiveDefinitionRepo.getById(secretObjective.getObjective()).orElse(NULL_OBJECTIVE), match.getStartEra()
-					))
+			MatchWithPlayers match =
+					matchService.getById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+			return objectivesService.getSecretObjectives(matchId, player)
+					.stream()
+					.map(secretObjective -> new SecretObjectiveResponse(
+							secretObjective,
+							objectiveDefinitionRepo.getById(secretObjective.getObjective()).orElse(NULL_OBJECTIVE),
+							match.getStartEra()))
 					.sorted(SECRET_OBJECTIVE_SORT)
 					.collect(Collectors.toList());
 		}
@@ -183,8 +196,10 @@ public class MatchesController {
 		} else {
 			CivBlitzToken token = jwtService.parse(jwToken);
 			Player player = playerService.getPlayer(token);
-			ObjectiveDefinition objective = objectiveDefinitionRepo.getById(objectiveId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-			MatchWithPlayers match = matchService.getById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+			ObjectiveDefinition objective = objectiveDefinitionRepo.getById(objectiveId)
+					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+			MatchWithPlayers match =
+					matchService.getById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 			objectivesService.claimObjective(player, objective, match);
 		}
 	}
@@ -197,8 +212,10 @@ public class MatchesController {
 		} else {
 			CivBlitzToken token = jwtService.parse(jwToken);
 			Player player = playerService.getPlayer(token);
-			ObjectiveDefinition objective = objectiveDefinitionRepo.getById(objectiveId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-			MatchWithPlayers match = matchService.getById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+			ObjectiveDefinition objective = objectiveDefinitionRepo.getById(objectiveId)
+					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+			MatchWithPlayers match =
+					matchService.getById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 			objectivesService.unclaimObjective(player, objective, match);
 		}
 	}
@@ -212,10 +229,14 @@ public class MatchesController {
 		} else {
 			CivBlitzToken token = jwtService.parse(jwToken);
 			Player player = playerService.getPlayer(token);
-			MatchWithPlayers match = matchService.getById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-			return allObjectivesService.getAllSecretObjectives(match, player).stream()
-					.map(secretObjective -> new SecretObjectiveResponse(secretObjective, objectiveDefinitionRepo.getById(secretObjective.getObjective()).orElse(NULL_OBJECTIVE), match.getStartEra()
-					))
+			MatchWithPlayers match =
+					matchService.getById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+			return allObjectivesService.getAllSecretObjectives(match, player)
+					.stream()
+					.map(secretObjective -> new SecretObjectiveResponse(
+							secretObjective,
+							objectiveDefinitionRepo.getById(secretObjective.getObjective()).orElse(NULL_OBJECTIVE),
+							match.getStartEra()))
 					.sorted(SECRET_OBJECTIVE_SORT)
 					.collect(Collectors.toList());
 		}
@@ -231,7 +252,8 @@ public class MatchesController {
 			CivBlitzToken token = jwtService.parse(jwToken);
 			Player player = playerService.getPlayer(token);
 			List<SecretObjective> secretObjectives = objectivesService.getSecretObjectives(matchId, player);
-			MatchWithPlayers match = matchService.getById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+			MatchWithPlayers match =
+					matchService.getById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 			Optional<SecretObjective> chosenObjective = secretObjectives
 					.stream().filter(o -> o.getObjective().equals(objective))
 					.findFirst();
@@ -243,24 +265,24 @@ public class MatchesController {
 						.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
 
-				if (!secretObjective.getSelected() && secretObjectives.stream().filter(SecretObjective::getSelected).count() == 3) {
+				if (!secretObjective.getSelected() &&
+						secretObjectives.stream().filter(SecretObjective::getSelected).count() == 3) {
 					// already have 3 other objectives selected
-				} else if (!secretObjective.getSelected() &&
-						secretObjectives.stream()
-								.filter(SecretObjective::getSelected)
-								.map(obj -> objectiveDefinitionRepo.getById(obj.getObjective()).orElse(NULL_OBJECTIVE))
-								.anyMatch(obj -> Objects.equals(obj.getStars(match.getStartEra()), chosenObjectiveDef.getStars(match.getStartEra())))) {
+				} else if (!secretObjective.getSelected() && secretObjectives.stream()
+						.filter(SecretObjective::getSelected)
+						.map(obj -> objectiveDefinitionRepo.getById(obj.getObjective()).orElse(NULL_OBJECTIVE))
+						.anyMatch(obj -> Objects.equals(obj.getStars(match.getStartEra()),
+								chosenObjectiveDef.getStars(match.getStartEra())))) {
 					// Selecting an objective when we already have an objective selected for that many stars
 				} else {
 					secretObjective.setSelected(!secretObjective.getSelected());
 					matchService.updateSecretObjectiveSelection(secretObjective);
 				}
 
-				return secretObjectives.stream()
-						.map(so -> new SecretObjectiveResponse(so, objectiveDefinitionRepo.getById(so.getObjective()).orElse(NULL_OBJECTIVE), match.getStartEra()
-						))
-						.sorted(SECRET_OBJECTIVE_SORT)
-						.collect(Collectors.toList());
+				return secretObjectives.stream().map(so -> new SecretObjectiveResponse(
+						so,
+						objectiveDefinitionRepo.getById(so.getObjective()).orElse(NULL_OBJECTIVE),
+						match.getStartEra())).sorted(SECRET_OBJECTIVE_SORT).collect(Collectors.toList());
 			}
 		}
 	}
@@ -289,10 +311,18 @@ public class MatchesController {
 					StringBuilder auditDescription = new StringBuilder();
 					auditDescription.append("Edited match ").append(original.getMatchName());
 					if (!original.getMatchName().equals(match.getMatchName())) {
-						auditDescription.append(", changed name from '").append(original.getMatchName()).append("' to '").append(match.getMatchName()).append("'");
+						auditDescription.append(", changed name from '")
+								.append(original.getMatchName())
+								.append("' to '")
+								.append(match.getMatchName())
+								.append("'");
 					}
 					if (!original.getTimeslot().equals(match.getTimeslot())) {
-						auditDescription.append(", changed timeslot from '").append(original.getTimeslot()).append("' to '").append(match.getTimeslot()).append("'");
+						auditDescription.append(", changed timeslot from '")
+								.append(original.getTimeslot())
+								.append("' to '")
+								.append(match.getTimeslot())
+								.append("'");
 					}
 					auditLogger.record(player, auditDescription.toString(), match);
 					return match;
@@ -439,7 +469,10 @@ public class MatchesController {
 					throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 				} else {
 					Match result = matchService.switchState(match.get(), matchState, payload, player);
-					auditLogger.record(player, "Changed state of match " + result.getMatchName() + " to " + result.getMatchState(), match.get());
+					auditLogger.record(
+							player,
+							"Changed state of match " + result.getMatchName() + " to " + result.getMatchState(),
+							match.get());
 					return result;
 				}
 			}

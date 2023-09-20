@@ -20,16 +20,22 @@ public class ObjectiveDefinition {
 	public final String objectiveName;
 	public final String description;
 
-	private Map<StartEra, Integer> starsByEra = new EnumMap<>(StartEra.class);
+	private final Map<StartEra, Integer> starsByEra = new EnumMap<>(StartEra.class);
 
 	public final ObjectiveType objectiveType;
 	public final boolean military;
 	public final boolean active;
 
 	public enum ObjectiveType {
-		PUBLIC, SECRET;
+		PUBLIC, SECRET
 	}
-	public ObjectiveDefinition(String objectiveName, String objectiveId, String description, ObjectiveType objectiveType, boolean military, boolean active) {
+
+	public ObjectiveDefinition(String objectiveName,
+							   String objectiveId,
+							   String description,
+							   ObjectiveType objectiveType,
+							   boolean military,
+							   boolean active) {
 		this.objectiveName = objectiveName;
 		this.objectiveId = objectiveId;
 		this.description = description;

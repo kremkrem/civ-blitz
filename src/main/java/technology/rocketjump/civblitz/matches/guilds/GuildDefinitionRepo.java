@@ -15,15 +15,15 @@ public class GuildDefinitionRepo {
 	}
 
 	public void add(GuildDefinition guildDefinition) {
-		byGuildId.put(guildDefinition.guildId, guildDefinition);
+		byGuildId.put(guildDefinition.guildId(), guildDefinition);
 	}
 
 	public Optional<GuildDefinition> getById(String guildId) {
 		return Optional.ofNullable(byGuildId.get(guildId));
 	}
 
-	public List<GuildDefinition> getAll() {
-		return new ArrayList<>(byGuildId.values());
+	public Collection<GuildDefinition> getAll() {
+		return byGuildId.values();
 	}
 
 }

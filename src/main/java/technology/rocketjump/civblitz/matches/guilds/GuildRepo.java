@@ -31,7 +31,7 @@ public class GuildRepo {
 	public MatchGuild add(Match match, GuildDefinition guildDefinition) {
 		MatchGuild matchGuild = new MatchGuild();
 		matchGuild.setMatchId(match.getMatchId());
-		matchGuild.setGuildId(guildDefinition.guildId);
+		matchGuild.setGuildId(guildDefinition.guildId());
 		MatchGuildRecord record = create.newRecord(MATCH_GUILD, matchGuild);
 		record.store();
 		return matchGuild;

@@ -11,8 +11,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import technology.rocketjump.civblitz.mapgen.StartEra;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class GuildDefinitionParser {
@@ -64,7 +67,6 @@ public class GuildDefinitionParser {
 					definitions.add(definition);
 				});
 			}
-
 			return definitions;
 		} else {
 			throw new RuntimeException("Could not load objectives from google sheet, " + response.getBody());
@@ -82,13 +84,17 @@ public class GuildDefinitionParser {
 
 		String category = getColumn(row, ColumnHeader.Category);
 		String isActive = getColumn(row, ColumnHeader.Is_Active);
+		Map<StartEra, Boolean> eras = Stream.of(ColumnHeader.Ancient, ColumnHeader.Medieval, ColumnHeader.Industrial)
+				.collect(Collectors.toMap(
+						era -> StartEra.valueOf(era.name()),
+						era -> Boolean.valueOf(getColumn(row, era))));
 
 		if (identifier.isEmpty()) {
 			identifier = toIdentifier(name);
 		}
 
 		GuildDefinition guildDefinition = new GuildDefinition(
-				name, identifier, description, category, !isActive.equalsIgnoreCase("FALSE")
+				name, identifier, description, category, !isActive.equalsIgnoreCase("FALSE"), eras
 		);
 
 		return Optional.of(guildDefinition);
