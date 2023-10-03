@@ -61,8 +61,8 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 				      	<Element text="Landmarks.artdef"/>
 				      </ArtDefDependencyPaths>
 				      <LibraryDependencies>
-				        <Element text="TileBase/>
-				        <Element text="CityBuildings/>
+				        <Element text="TileBase"/>
+				        <Element text="CityBuildings"/>
 				      </LibraryDependencies>
 				      <LoadsLibraries>true</LoadsLibraries>
 				    </Element>
