@@ -40,7 +40,6 @@ public class Card {
 	protected List<String> modifierIds = new ArrayList<>();
 	protected String gameplaySQL;
 	protected String localisationSQL;
-	protected Patch patchSQL;
 	protected Optional<ActOfGod> actOfGod = Optional.empty();
 
 	public Card() {
@@ -68,7 +67,6 @@ public class Card {
 		this.rarity = original.rarity;
 		this.gameplaySQL = original.gameplaySQL;
 		this.localisationSQL = original.localisationSQL;
-		this.patchSQL = original.patchSQL;
 		this.actOfGod = original.actOfGod;
 	}
 
@@ -248,14 +246,6 @@ public class Card {
 
 	public void setLocalisationSQL(String localisationSQL) {
 		this.localisationSQL = localisationSQL;
-	}
-
-	public Patch getPatchSQL() {
-		return patchSQL;
-	}
-
-	public void setPatchSQL(Patch patchSQL) {
-		this.patchSQL = patchSQL;
 	}
 
 	public Optional<ActOfGod> getActOfGod() {

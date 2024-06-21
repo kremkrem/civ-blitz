@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import org.stringtemplate.v4.ST;
 import technology.rocketjump.civblitz.model.Card;
 import technology.rocketjump.civblitz.model.CardCategory;
-import technology.rocketjump.civblitz.model.Patch;
 import technology.rocketjump.civblitz.model.SourceDataRepo;
 import technology.rocketjump.civblitz.modgenerator.BlitzFileGenerator;
 import technology.rocketjump.civblitz.modgenerator.ModHeaderGenerator;
@@ -65,17 +64,7 @@ public class LeaderSqlGenerator extends BlitzFileGenerator {
 				--------------------------------------------------------------------------------------------------------------------------
 				""", modName, leaderType, bgLeaderType));
 
-		if (leaderCard.getPatchSQL() != null && leaderCard.getPatchSQL().needsDedicatedAbility()) {
-			sqlBuilder.append(ST.format("""
-				-- Unique ability for attaching extra modifiers.
-				INSERT OR REPLACE INTO Types (Type, Kind) VALUES ('TRAIT_<%1>', 'KIND_TRAIT');
-				INSERT OR REPLACE INTO Traits (TraitType, InternalOnly) VALUES ('TRAIT_<%1>', 1);
-				INSERT OR REPLACE INTO LeaderTraits (LeaderType, TraitType) VALUES ('<%1>', 'TRAIT_<%1>');
-				
-				""", "LEADER_IMP_" + modName));
-		}
-
-		addLeaderTrait(sqlBuilder, leaderCard.getTraitType(), modName, leaderCard.getPatchSQL());
+		addLeaderTrait(sqlBuilder, leaderCard.getTraitType(), modName);
 
 		if (civInfo.getCard(CardCategory.CivilizationAbility).getTraitType().equals("TRAIT_CIVILIZATION_MAORI_MANA")) {
 			sqlBuilder.append("INSERT OR REPLACE INTO Leaders_XP2 (LeaderType, OceanStart) ")
@@ -88,7 +77,7 @@ public class LeaderSqlGenerator extends BlitzFileGenerator {
 
 		if (leaderCard.getGrantsTraitType().isPresent()) {
 			// NOTE(sztodwa): applying fixes to "Grants" traits should be implemented.
-			addLeaderTrait(sqlBuilder, leaderCard.getGrantsTraitType().get(), modName, null);
+			addLeaderTrait(sqlBuilder, leaderCard.getGrantsTraitType().get(), modName);
 		}
 
 		sqlBuilder.append(
@@ -149,17 +138,9 @@ public class LeaderSqlGenerator extends BlitzFileGenerator {
 		return sqlBuilder.toString();
 	}
 
-	private void addLeaderTrait(StringBuilder sqlBuilder, String traitType, String modName, Patch patch) {
+	private void addLeaderTrait(StringBuilder sqlBuilder, String traitType, String modName) {
 		sqlBuilder.append("INSERT INTO LeaderTraits (LeaderType, TraitType)\n" +
 				"VALUES ('LEADER_IMP_").append(modName).append("', '").append(traitType).append("');\n");
-		if (patch != null) {
-			sqlBuilder.append(
-							"--------------------------------------------------------------------------------------------------------------------------\n-- ")
-					.append(traitType).append(" fix.\n");
-			ST template = new ST(patch.getSqlTemplate());
-			template.add("modName", modName);
-			sqlBuilder.append(template.render()).append("\n");
-		}
 	}
 
 	@Override

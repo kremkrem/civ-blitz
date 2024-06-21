@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import technology.rocketjump.civblitz.model.*;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static technology.rocketjump.civblitz.matches.objectives.ObjectiveDefinitionParser.toIdentifier;
 import static technology.rocketjump.civblitz.model.CardRarity.Common;
@@ -128,7 +129,6 @@ public class ModifierCardsParser {
 		powerCard.setCivilizationFriendlyName(civAbilityCard.getCivilizationFriendlyName());
 		powerCard.setMediaName(civAbilityCard.getMediaName());
 		powerCard.setRequiredDlc(civAbilityCard.getRequiredDlc());
-		powerCard.setPatchSQL(civAbilityCard.getPatchSQL());
 		if (!addsTraitType.isEmpty()) {
 			powerCard.setGrantsTraitType(Optional.of(addsTraitType));
 		}
@@ -181,7 +181,8 @@ public class ModifierCardsParser {
 		upgradedCard.setMediaName(baseCard.getMediaName());
 		upgradedCard.setRequiredDlc(baseCard.getRequiredDlc());
 		upgradedCard.getModifierIds().addAll(baseCard.getModifierIds());
-		upgradedCard.setGameplaySQL(gameplaySql);
+		upgradedCard.setGameplaySQL(String.join("\n--\n",
+				Stream.of(baseCard.getGameplaySQL(), gameplaySql).filter(Objects::nonNull).toList()));
 		upgradedCard.setLocalisationSQL(localisationSql);
 
 		return Optional.of(upgradedCard);

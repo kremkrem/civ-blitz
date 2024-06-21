@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import org.stringtemplate.v4.ST;
 import technology.rocketjump.civblitz.model.Card;
 import technology.rocketjump.civblitz.model.CardCategory;
-import technology.rocketjump.civblitz.model.Patch;
 import technology.rocketjump.civblitz.modgenerator.BlitzFileGenerator;
 import technology.rocketjump.civblitz.modgenerator.ModHeaderGenerator;
 import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
@@ -33,11 +32,10 @@ public class CivTraitsSqlGenerator extends BlitzFileGenerator {
 		for (CardCategory cardCategory : CardCategory.mainCategories) {
 			if (!cardCategory.equals(CardCategory.LeaderAbility)) {
 				final Card card = civInfo.getCard(cardCategory);
-				addCivTraitLine(sqlBuilder, card.getTraitType(), modName, card.getPatchSQL());
+				addCivTraitLine(sqlBuilder, card.getTraitType(), modName);
 				if (card.getGrantsTraitType().isPresent()) {
-					addCivTraitLine(sqlBuilder, card.getGrantsTraitType().get(), modName, card.getPatchSQL());
+					addCivTraitLine(sqlBuilder, card.getGrantsTraitType().get(), modName);
 				}
-
 				if (cardCategory.equals(CivilizationAbility)) {
 					for (ActOfGod actOfGod : modHeader.actsOfGod) {
 						actOfGod.applyToCivTrait(card.getTraitType(), modName, sqlBuilder);
@@ -51,7 +49,7 @@ public class CivTraitsSqlGenerator extends BlitzFileGenerator {
 				.forEach(powerCard -> {
 					sqlBuilder.append("-- ").append(powerCard.getIdentifier()).append("\n");
 					if (powerCard.getGrantsTraitType().isPresent()) {
-						addCivTraitLine(sqlBuilder, powerCard.getGrantsTraitType().get(), modName, powerCard.getPatchSQL());
+						addCivTraitLine(sqlBuilder, powerCard.getGrantsTraitType().get(), modName);
 					}
 					powerCard.getModifierIds().forEach(modifierId ->
 							addTraitModifierLine(sqlBuilder, uniqueCivTraitName, modifierId)
@@ -62,27 +60,16 @@ public class CivTraitsSqlGenerator extends BlitzFileGenerator {
 	}
 
 	private static final Predicate<Card> needsDedicatedAbility = (card) ->
-			card.getCardCategory().equals(Power) ||
-					(card.getPatchSQL() != null && card.getPatchSQL().needsDedicatedAbility());
+			card.getCardCategory().equals(Power);
 
 	private void addTraitModifierLine(StringBuilder sqlBuilder, String civAbilityTraitType, String modifierId) {
 		sqlBuilder.append("INSERT OR REPLACE INTO TraitModifiers (TraitType, ModifierId) VALUES ('")
 				.append(civAbilityTraitType).append("', '").append(modifierId).append("');\n");
 	}
 
-	private void addCivTraitLine(StringBuilder sqlBuilder, String traitType, String modName, Patch patch) {
+	private void addCivTraitLine(StringBuilder sqlBuilder, String traitType, String modName) {
 		sqlBuilder.append("INSERT OR REPLACE INTO CivilizationTraits (TraitType, CivilizationType) VALUES ('")
 				.append(traitType).append("', 'CIVILIZATION_IMP_").append(modName).append("');\n");
-		if (patch != null) {
-			sqlBuilder.append(
-					"--------------------------------------------------------------------------------------------------------------------------\n-- ")
-					.append(traitType).append(" fix.\n");
-			ST template = new ST(patch.getSqlTemplate());
-			template.add("modName", modName);
-			sqlBuilder.append(template.render());
-			sqlBuilder.append(
-					"\n--------------------------------------------------------------------------------------------------------------------------\n");
-		}
 	}
 
 	private void registerNewCivTrait(StringBuilder sqlBuilder, String civTraitType, String modName) {

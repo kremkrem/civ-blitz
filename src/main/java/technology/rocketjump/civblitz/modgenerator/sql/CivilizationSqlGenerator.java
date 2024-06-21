@@ -4,6 +4,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.jooq.tools.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.stringtemplate.v4.ST;
 import technology.rocketjump.civblitz.model.Card;
 import technology.rocketjump.civblitz.model.SourceDataRepo;
 import technology.rocketjump.civblitz.modgenerator.BlitzFileGenerator;
@@ -26,17 +27,24 @@ public class CivilizationSqlGenerator extends BlitzFileGenerator {
 	@Override
 	public String getFileContents(ModHeader modHeader, ModdedCivInfo civInfo) {
 		Card civAbilityCard = civInfo.getCard(CivilizationAbility);
-		String civSql = getCivilizationSql(
+		StringBuilder civSql = new StringBuilder(getCivilizationSql(
 				ModHeaderGenerator.buildName(civInfo.selectedCards).toUpperCase(),
 				civAbilityCard.getCivilizationType(),
 				civInfo.startBiasCivType
-		);
+		));
+		String civModName = ModHeaderGenerator.buildName(civInfo.selectedCards).toUpperCase();
 		for (Card card : civInfo.selectedCards) {
 			if (!StringUtils.isEmpty(card.getGameplaySQL())) {
-				civSql = civSql + "\n\n-- " + card.getIdentifier() + "\n" + card.getGameplaySQL();
+				ST template = new ST(card.getGameplaySQL());
+				template.add("modName", civModName);
+				civSql.append("\n\n-- ")
+						.append(card.getIdentifier())
+						.append("\n")
+						.append(template.render())
+						.append("\n");
 			}
 		}
-		return civSql;
+		return civSql.toString();
 	}
 
 	private String getCivilizationSql(String modName, String namesCivType, String startBiasCivType) {
