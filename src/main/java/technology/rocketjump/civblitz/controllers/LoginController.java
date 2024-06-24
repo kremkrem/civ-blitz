@@ -58,7 +58,7 @@ public class LoginController {
 		String jwt = jwtService.create(token, player);
 
 		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.set("Location", "/?token=" + jwt);
+		responseHeaders.set("Location", "/#/?token=" + jwt);
 
 		return ResponseEntity.status(HttpStatus.FOUND).headers(responseHeaders).build();
 	}

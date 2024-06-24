@@ -19,7 +19,7 @@ import DlcSettingsPage from "./player/DlcSettingsPage";
 import PlayerLeaderboard from "./player/PlayerLeaderboard";
 import KnownBugs from "./KnownBugs";
 
-const App = ({history}) => {
+const App = ({location, history}) => {
 
     const [loading, setLoading] = useState(true);
     const [loggedInPlayer, setLoggedInPlayer] = useState();
@@ -27,10 +27,11 @@ const App = ({history}) => {
     const [discordClientId, setDiscordClientId] = useState("");
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
+        const urlParams = new URLSearchParams(location.search);
         let jsonWebToken = urlParams.get('token');
         if (jsonWebToken) {
             window.localStorage.setItem('token', jsonWebToken);
+            history.replace({search: ''});
         } else {
             jsonWebToken = window.localStorage.getItem('token');
             // TODO check for expiry and trigger refresh of token here
