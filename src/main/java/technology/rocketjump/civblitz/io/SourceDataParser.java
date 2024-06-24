@@ -50,7 +50,10 @@ public class SourceDataParser {
 							@Qualifier("FallbackLeaderArtDefs") String fallbackLeaderArtDefsContent,
 							@Qualifier("CivilizationsCulture") String civilizationsCultureContent,
 							@Qualifier("LandmarksArtDefs") String landmarksArtDefs,
-							@Value("#{new Boolean('${multiplayer-flag}')}") boolean multiplayerFlag) throws IOException {
+							@Qualifier("PowerCards") String powerCards,
+							@Qualifier("UpgradeCards") String upgradeCards,
+							@Value("#{new Boolean('${multiplayer-flag}')}") boolean multiplayerFlag)
+			throws IOException {
 		leaderTraitsParser.parse(leaderTraitsContent);
 		civTraitsParser.parse(civTraitsContent);
 		subtypesParser.parse(subtypesContent);
@@ -78,8 +81,9 @@ public class SourceDataParser {
 		verifyIconAtlasEntries(sourceDataRepo);
 		verifyAllCivRecordEntries(sourceDataRepo);
 
+		modifierCardsParser.parsePowerCards(powerCards);
+		modifierCardsParser.parseUpgradeCards(upgradeCards);
 		if (multiplayerFlag) {
-			modifierCardsParser.readFromGoogleSheet();
 			actOfGodCardsParser.readFromGoogleSheet();
 		}
 

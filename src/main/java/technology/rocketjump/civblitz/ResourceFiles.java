@@ -228,4 +228,28 @@ public class ResourceFiles {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Value("classpath:csv/PowerCards.csv")
+	private Resource powerCardsFile;
+
+	@Bean(name = "PowerCards")
+	public String PowerCards() {
+		try (InputStream is = powerCardsFile.getInputStream()) {
+			return StreamUtils.copyToString(is, StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Value("classpath:csv/UpgradeCards.csv")
+	private Resource upgradeCardsFile;
+
+	@Bean(name = "UpgradeCards")
+	public String UpgradeCards() {
+		try (InputStream is = upgradeCardsFile.getInputStream()) {
+			return StreamUtils.copyToString(is, StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

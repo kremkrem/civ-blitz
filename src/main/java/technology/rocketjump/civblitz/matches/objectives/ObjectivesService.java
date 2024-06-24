@@ -139,7 +139,7 @@ public class ObjectivesService {
 			selectedObjective = objectivesToPickFrom.get(random.nextInt(objectivesToPickFrom.size()));
 			if (selectedObjectives.contains(selectedObjective)) {
 				selectedObjective = null;
-			} else if (requiredNumStars != null && requiredNumStars.equals(selectedObjective.getStars(startEra))) {
+			} else if (requiredNumStars != null && !requiredNumStars.equals(selectedObjective.getStars(startEra))) {
 				selectedObjective = null;
 			}
 		}

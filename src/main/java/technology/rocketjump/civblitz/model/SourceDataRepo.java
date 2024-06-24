@@ -1,7 +1,6 @@
 package technology.rocketjump.civblitz.model;
 
 import org.apache.commons.csv.CSVRecord;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -41,11 +40,6 @@ public class SourceDataRepo {
 	public final Map<String, String> civilizationToCivilizationArtdef = new HashMap<>();
 	public final List<LandmarkData> landmarkArtdefs = new ArrayList<>();
 
-	@Autowired
-	public SourceDataRepo() {
-
-	}
-
 	public void addCivFriendlyName(String civilizationType, String civFriendlyName) {
 		friendlyNameByCivilizationType.put(civilizationType, civFriendlyName);
 	}
@@ -60,14 +54,14 @@ public class SourceDataRepo {
 	}
 
 	public void removeGrantedCards() {
-		for (String identifier : new ArrayList<>(cardsByIdentifier.keySet())) {
-			Card card = cardsByIdentifier.get(identifier);
-			if (card != null && card.getGrantsTraitType().isPresent()) {
-				Card removed = cardsByIdentifier.remove("COMMON_"+card.getGrantsTraitType().get());
-				cardsByCategory.get(removed.getCardCategory()).remove(removed);
-			}
+		List<String> toRemove = cardsByIdentifier.values().stream().flatMap(card -> card.getGrantsTraitType().stream())
+				.map(str -> "COMMON_"+str)
+				.distinct()
+				.toList();
+		for (String id : toRemove) {
+			Card removed = cardsByIdentifier.remove(id);
+			cardsByCategory.get(removed.getCardCategory()).remove(removed);
 		}
-
 	}
 
 	public Collection<Card> getAll() {
