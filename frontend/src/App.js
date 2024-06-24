@@ -74,7 +74,7 @@ const App = ({location, history}) => {
                 console.error('Error loading cards', error);
             });
 
-    }, []);
+    }, [history, location]);
 
     const logout = () => {
         window.localStorage.clear();
