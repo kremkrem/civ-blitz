@@ -12,27 +12,22 @@ import technology.rocketjump.civblitz.modgenerator.sql.actsofgod.ActOfGod;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 @Component
 public class LocaleGenerator extends BlitzFileGenerator {
 
 	@Override
 	public String getFileContents(ModHeader modHeader, ModdedCivInfo civInfo) {
-		return getFileContents(modHeader, civInfo, true);
+		return getLocalizedTextSplitSql(civInfo.selectedCards.stream()) + getCivLocale(civInfo);
 	}
 
 	@Override
 	public String getFileContents(ModHeader modHeader, List<ModdedCivInfo> civs) {
 		StringBuilder builder = new StringBuilder();
-		if (civs.stream()
-				.flatMap(civInfo -> civInfo.selectedCards.stream())
-				.map(Card::getLocalizationSQL)
-				.filter(Objects::nonNull)
-				.anyMatch(sql -> sql.contains("LocalizedTextSplit"))) {
-			builder.append(LOCALIZED_TEXT_SPLIT_SQL);
-		}
+		builder.append(getLocalizedTextSplitSql(civs.stream().flatMap(civInfo -> civInfo.selectedCards.stream())));
 		for (ModdedCivInfo civ : civs) {
-			builder.append(getFileContents(modHeader, civ, false));
+			builder.append(getCivLocale(civ));
 		}
 		for (ActOfGod actOfGod : modHeader.actsOfGod) {
 			actOfGod.applyLocalisationChanges(builder);
@@ -49,6 +44,7 @@ public class LocaleGenerator extends BlitzFileGenerator {
 			CREATE TEMP TABLE IF NOT EXISTS LocalizedTextSplit AS
 			WITH RECURSIVE Split AS (SELECT Tag, Language, Text AS Part, Text AS Remainder, 0 AS Idx
 			                         FROM LocalizedText
+			                         WHERE Tag LIKE 'LOC_%_DESCRIPTION'
 			                         UNION ALL
 			                         SELECT Tag,
 			                                Language,
@@ -63,15 +59,14 @@ public class LocaleGenerator extends BlitzFileGenerator {
 			
 			""";
 
-	private String getFileContents(ModHeader modHeader, ModdedCivInfo civInfo, boolean addSplitTable) {
-		StringBuilder sqlBuilder = new StringBuilder();
-
-		if (addSplitTable && civInfo.selectedCards.stream()
-				.map(Card::getLocalizationSQL)
+	private String getLocalizedTextSplitSql(Stream<Card> cards) {
+		return cards.map(Card::getLocalizationSQL)
 				.filter(Objects::nonNull)
-				.anyMatch(sql -> sql.contains("LocalizedTextSplit"))) {
-			sqlBuilder.append(LOCALIZED_TEXT_SPLIT_SQL);
-		}
+				.anyMatch(sql -> sql.contains("LocalizedTextSplit")) ? LOCALIZED_TEXT_SPLIT_SQL : "";
+	}
+
+	private String getCivLocale(ModdedCivInfo civInfo) {
+		StringBuilder sqlBuilder = new StringBuilder();
 
 		String modName = ModHeaderGenerator.buildName(civInfo.selectedCards).toUpperCase();
 
@@ -92,7 +87,10 @@ public class LocaleGenerator extends BlitzFileGenerator {
 
 		for (Card card : civInfo.selectedCards) {
 			if (!StringUtils.isEmpty(card.getLocalizationSQL())) {
-				sqlBuilder.append("\n\n-- ").append(card.getIdentifier()).append("\n").append(card.getLocalizationSQL());
+				sqlBuilder.append("\n\n-- ")
+						.append(card.getIdentifier())
+						.append("\n")
+						.append(card.getLocalizationSQL());
 			}
 		}
 
