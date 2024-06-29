@@ -10,8 +10,6 @@ import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
 import technology.rocketjump.civblitz.modgenerator.model.ModdedCivInfo;
 import technology.rocketjump.civblitz.modgenerator.sql.actsofgod.ActOfGod;
 
-import java.util.function.Predicate;
-
 import static technology.rocketjump.civblitz.model.CardCategory.CivilizationAbility;
 import static technology.rocketjump.civblitz.model.CardCategory.Power;
 
@@ -21,13 +19,7 @@ public class CivTraitsSqlGenerator extends BlitzFileGenerator {
 	@Override
 	public String getFileContents(ModHeader modHeader, ModdedCivInfo civInfo) {
 		final String modName = ModHeaderGenerator.buildName(civInfo.selectedCards).toUpperCase();
-		// For attaching extra modifiers, beyond the regular civ trait.
-		final String uniqueCivTraitName = "TRAIT_CIVILIZATION_" + modName;
 		final StringBuilder sqlBuilder = new StringBuilder();
-
-		if (civInfo.selectedCards.stream().anyMatch(needsDedicatedAbility)) {
-			registerNewCivTrait(sqlBuilder, uniqueCivTraitName, modName);
-		}
 
 		for (CardCategory cardCategory : CardCategory.mainCategories) {
 			if (!cardCategory.equals(CardCategory.LeaderAbility)) {
@@ -51,20 +43,15 @@ public class CivTraitsSqlGenerator extends BlitzFileGenerator {
 					if (powerCard.getGrantsTraitType().isPresent()) {
 						addCivTraitLine(sqlBuilder, powerCard.getGrantsTraitType().get(), modName);
 					}
-					powerCard.getModifierIds().forEach(modifierId ->
-							addTraitModifierLine(sqlBuilder, uniqueCivTraitName, modifierId)
-					);
+					if (!powerCard.getModifierIds().isEmpty()) {
+						registerNewCivTrait(sqlBuilder, powerCard.getTraitType(), modName);
+						powerCard.getModifierIds().forEach(modifierId ->
+								addTraitModifierLine(sqlBuilder, powerCard.getTraitType(), modifierId)
+						);
+					}
 				});
 
 		return sqlBuilder.toString();
-	}
-
-	private static final Predicate<Card> needsDedicatedAbility = (card) ->
-			card.getCardCategory().equals(Power);
-
-	private void addTraitModifierLine(StringBuilder sqlBuilder, String civAbilityTraitType, String modifierId) {
-		sqlBuilder.append("INSERT OR REPLACE INTO TraitModifiers (TraitType, ModifierId) VALUES ('")
-				.append(civAbilityTraitType).append("', '").append(modifierId).append("');\n");
 	}
 
 	private void addCivTraitLine(StringBuilder sqlBuilder, String traitType, String modName) {
@@ -72,14 +59,24 @@ public class CivTraitsSqlGenerator extends BlitzFileGenerator {
 				.append(traitType).append("', 'CIVILIZATION_IMP_").append(modName).append("');\n");
 	}
 
+	private static final ST NEW_TRAIT_TEMPLATE = new ST("""
+			INSERT OR IGNORE INTO Types (Type, Kind) VALUES ('<type>', 'KIND_TRAIT');
+			INSERT OR IGNORE INTO Traits (TraitType, Name, Description)
+			VALUES ('<type>', 'LOC_<type>_NAME', 'LOC_<type>_DESCRIPTION');
+			INSERT OR REPLACE INTO CivilizationTraits (TraitType, CivilizationType) VALUES ('<type>', '<civType>');
+			
+			""");
+
 	private void registerNewCivTrait(StringBuilder sqlBuilder, String civTraitType, String modName) {
-		sqlBuilder.append(ST.format("""
-				-- Unique ability for attaching extra modifiers.
-				INSERT OR REPLACE INTO Types (Type, Kind) VALUES ('<%1>', 'KIND_TRAIT');
-				INSERT OR REPLACE INTO Traits (TraitType, InternalOnly) VALUES ('<%1>', 1);
-				INSERT OR REPLACE INTO CivilizationTraits (TraitType, CivilizationType) VALUES ('<%1>', '<%2>');
-				
-				""", civTraitType, "CIVILIZATION_IMP_" + modName));
+		sqlBuilder.append(new ST(NEW_TRAIT_TEMPLATE)
+				.add("type", civTraitType)
+				.add("civType", "CIVILIZATION_IMP_" + modName)
+				.render());
+	}
+
+	private void addTraitModifierLine(StringBuilder sqlBuilder, String civAbilityTraitType, String modifierId) {
+		sqlBuilder.append("INSERT OR REPLACE INTO TraitModifiers (TraitType, ModifierId) VALUES ('")
+				.append(civAbilityTraitType).append("', '").append(modifierId).append("');\n");
 	}
 
 	@Override

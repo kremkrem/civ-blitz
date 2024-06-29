@@ -13,8 +13,10 @@ import technology.rocketjump.civblitz.model.*;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static technology.rocketjump.civblitz.matches.objectives.ObjectiveDefinitionParser.toIdentifier;
@@ -97,17 +99,49 @@ public class ModifierCardsParser {
 
 			Card powerCard = new Card(civAbilityCard);
 			powerCard.setIdentifier(data.getIdentifier());
-			powerCard.setCardCategory(CardCategory.Power);
-			powerCard.setSuperCategory(SuperCategory.Power);
 			powerCard.setBaseCardDescription("");
 			powerCard.setEnhancedCardName(data.getEnhancedCardName());
 			powerCard.setEnhancedCardDescription(data.getEnhancedCardDescription());
+			powerCard.setCardCategory(CardCategory.Power);
+			powerCard.setSuperCategory(SuperCategory.Power);
 			powerCard.setRarity(data.getRarity());
 			if (!addsTraitType.isBlank()) {
 				powerCard.setGrantsTraitType(Optional.of(addsTraitType));
 			}
 			powerCard.getModifierIds().clear();
 			powerCard.getModifierIds().addAll(modifierIds.stream().filter(m -> !m.isBlank()).toList());
+			if (!powerCard.getModifierIds().isEmpty()) {
+				powerCard.setTraitType("TRAIT_IMP_" + powerCard.getIdentifier());
+			}
+			String localizationGlue = record.get("LocalizationGlue");
+			String nameSql = "INSERT OR IGNORE INTO LocalizedText(Tag, Language, Text) VALUES ('LOC_"
+					+ powerCard.getTraitType()
+					+ "_NAME', 'en_US', '" + data.getEnhancedCardName() + "');";
+			String descSql = "";
+			if (localizationGlue != null && !localizationGlue.isBlank()) {
+				String[] terms = localizationGlue.split(",");
+				String sourceLocalization = terms[0].trim();
+				boolean isValid = !sourceLocalization.isBlank() && terms.length >= 2;
+				for (int i = 1; i < terms.length; i++) {
+					try {
+						 Integer.parseInt(terms[i]);
+					} catch (NumberFormatException e) {
+						isValid = false;
+					}
+				}
+
+				if (isValid) {
+					descSql = "INSERT OR IGNORE INTO LocalizedText(Tag, Language, Text)\n"
+							+ "SELECT 'LOC_" + powerCard.getTraitType() + "_DESCRIPTION', Language, "
+							+ "TRIM(group_concat(Part, ' '))\n"
+							+ "FROM LocalizedTextSplit\n"
+							+ "WHERE Tag = '" + sourceLocalization
+							+ "' AND Idx IN (" + Arrays.stream(terms).skip(1).collect(Collectors.joining(", "))
+							+ ")\n"
+							+ "GROUP BY Language;";
+				}
+			}
+			powerCard.setLocalizationSQL(nameSql + "\n" + descSql);
 
 			return powerCard;
 		});
@@ -133,7 +167,7 @@ public class ModifierCardsParser {
 			}
 
 			String gameplaySql = record.get("SQL");
-			String localisationSql = record.get("LocalisationSQL");
+			String localizationSql = record.get("LocalisationSQL");
 
 			Card upgradedCard = new Card(baseCard);
 			upgradedCard.setIdentifier(identifier);
@@ -146,10 +180,9 @@ public class ModifierCardsParser {
 					Stream.of(baseCard.getGameplaySQL(), gameplaySql)
 							.filter(str -> str != null && !str.isBlank())
 							.toList()));
-			upgradedCard.setLocalisationSQL(localisationSql);
+			upgradedCard.setLocalizationSQL(localizationSql);
 
 			return upgradedCard;
 		});
 	}
-
 }

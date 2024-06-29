@@ -41,7 +41,7 @@ public class CompleteModGenerator {
 								GeographySqlGenerator geographySqlGenerator,
 								IconsSqlGenerator iconsSqlGenerator,
 								LeaderSqlGenerator leaderSqlGenerator,
-								LeaderTextSqlGenerator leaderTextSqlGenerator,
+								LocaleGenerator localeGenerator,
 								ArtDepGenerator artDepGenerator,
 								AllArtDefGenerators allArtDefGenerators) {
 		this.resourceLoader = resourceLoader;
@@ -55,7 +55,7 @@ public class CompleteModGenerator {
 		fileGeneratorList.add(iconsSqlGenerator);
 		fileGeneratorList.add(modInfoGenerator);
 		fileGeneratorList.add(leaderSqlGenerator);
-		fileGeneratorList.add(leaderTextSqlGenerator);
+		fileGeneratorList.add(localeGenerator);
 		fileGeneratorList.add(artDepGenerator);
 		fileGeneratorList.addAll(allArtDefGenerators.getAll());
 	}

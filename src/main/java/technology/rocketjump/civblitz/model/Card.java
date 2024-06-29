@@ -39,7 +39,7 @@ public class Card {
 	protected String requiredDlc;
 	protected List<String> modifierIds = new ArrayList<>();
 	protected String gameplaySQL;
-	protected String localisationSQL;
+	protected String localizationSQL;
 	protected Optional<ActOfGod> actOfGod = Optional.empty();
 
 	public Card() {
@@ -66,7 +66,7 @@ public class Card {
 		this.superCategory = original.superCategory;
 		this.rarity = original.rarity;
 		this.gameplaySQL = original.gameplaySQL;
-		this.localisationSQL = original.localisationSQL;
+		this.localizationSQL = original.localizationSQL;
 		this.actOfGod = original.actOfGod;
 	}
 
@@ -240,12 +240,12 @@ public class Card {
 		this.gameplaySQL = gameplaySQL;
 	}
 
-	public String getLocalisationSQL() {
-		return localisationSQL;
+	public String getLocalizationSQL() {
+		return localizationSQL;
 	}
 
-	public void setLocalisationSQL(String localisationSQL) {
-		this.localisationSQL = localisationSQL;
+	public void setLocalizationSQL(String localizationSQL) {
+		this.localizationSQL = localizationSQL;
 	}
 
 	public Optional<ActOfGod> getActOfGod() {

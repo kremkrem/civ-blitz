@@ -72,7 +72,7 @@ public class ModInfoGenerator extends BlitzFileGenerator {
 					  <File>Colors.sql</File>
 					</UpdateColors>
 					<UpdateText id="Text">
-					  <File>LeaderText.sql</File>
+					  <File>Locale.sql</File>
 					</UpdateText>
 					<UpdateIcons id="Icons">
 					  <File>Icons.sql</File>
@@ -98,7 +98,7 @@ public class ModInfoGenerator extends BlitzFileGenerator {
 					  <File>Colors.sql</File>
 					</UpdateColors>
 					<UpdateText id="Text">
-					  <File>LeaderText.sql</File>
+					  <File>Locale.sql</File>
 					</UpdateText>
 					<UpdateIcons id="Icons">
 					  <File>Icons.sql</File>
@@ -123,7 +123,7 @@ public class ModInfoGenerator extends BlitzFileGenerator {
 					<File>Geography.sql</File>
 					<File>Icons.sql</File>
 					<File>Leader.sql</File>
-					<File>LeaderText.sql</File>
+					<File>Locale.sql</File>
 					<File>ArtDefs/Civilizations.artdef</File>
 					<File>ArtDefs/Cultures.artdef</File>
 					<File>ArtDefs/Landmarks.artdef</File>
