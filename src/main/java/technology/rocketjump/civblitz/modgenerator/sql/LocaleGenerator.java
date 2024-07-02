@@ -48,7 +48,7 @@ public class LocaleGenerator extends BlitzFileGenerator {
 			                         UNION ALL
 			                         SELECT Tag,
 			                                Language,
-			                                SUBSTR(Remainder, 1, INSTR(Remainder, '.') + INSTR(Remainder, '。'))  AS Part,
+			                                TRIM(SUBSTR(Remainder, 1, INSTR(Remainder, '.') + INSTR(Remainder, '。'))) AS Part,
 			                                SUBSTR(Remainder, INSTR(Remainder, '.') + INSTR(Remainder, '。') + 1) AS Remainder,
 			                                idx + 1                                                              AS Idx
 			                         FROM Split
