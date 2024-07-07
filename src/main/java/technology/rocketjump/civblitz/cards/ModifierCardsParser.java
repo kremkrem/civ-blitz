@@ -160,7 +160,7 @@ public class ModifierCardsParser {
 				return null;
 			}
 
-			String identifier = data.getRarity().name() + "_" + upgradesCard;
+			String identifier = data.getRarity().name().toUpperCase() + "_" + upgradesCard;
 			if (sourceDataRepo.getByIdentifier(identifier) != null) {
 				logger.error("Duplicate card with identifier {}", identifier);
 				return null;
