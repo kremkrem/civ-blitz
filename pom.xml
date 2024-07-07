@@ -386,7 +386,7 @@
                         <artifactId>appengine-maven-plugin</artifactId>
                         <version>2.4.4</version>
                         <configuration>
-                            <version>5</version>
+                            <version>9</version>
                             <projectId>GCLOUD_CONFIG</projectId>
                             <appEngineDirectory>.</appEngineDirectory>
                         </configuration>
