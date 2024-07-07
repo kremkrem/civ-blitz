@@ -117,7 +117,9 @@ public class ModifierCardsParser {
 			String nameSql = "INSERT OR IGNORE INTO LocalizedText(Tag, Language, Text) VALUES ('LOC_"
 					+ powerCard.getTraitType()
 					+ "_NAME', 'en_US', '" + data.getEnhancedCardName() + "');";
-			String descSql = "";
+			String descSql = "INSERT OR IGNORE INTO LocalizedText(Tag, Language, Text) VALUES ('LOC_"
+					+ powerCard.getTraitType()
+					+ "_DESCRIPTION', 'en_US', '" + data.getEnhancedCardDescription().split("Civ card: ")[1] + "');";
 			if (localizationGlue != null && !localizationGlue.isBlank()) {
 				String[] terms = localizationGlue.split(",");
 				String sourceLocalization = terms[0].trim();
@@ -141,7 +143,7 @@ public class ModifierCardsParser {
 							+ "GROUP BY Language;";
 				}
 			}
-			powerCard.setLocalizationSQL(nameSql + "\n" + descSql);
+			powerCard.setLocalizationSQL(nameSql + "\n" + descSql + "\n");
 
 			return powerCard;
 		});
