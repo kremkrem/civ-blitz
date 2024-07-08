@@ -75,7 +75,9 @@ public class MatchService {
 		Optional<MatchWithPlayers> matchById = matchRepo.getMatchById(matchId);
 		if (matchById.isPresent()) {
 			if (!matchById.get().getMatchState().equals(SIGNUPS)) {
-				throw new ResponseStatusException(HttpStatus.CONFLICT, "Can not sign up to an in-progress match, only during signups");
+				throw new ResponseStatusException(
+						HttpStatus.CONFLICT,
+						"Can not sign up to an in-progress match, only during signups");
 			}
 			matchRepo.signup(matchById.get(), player);
 		} else {
@@ -87,7 +89,9 @@ public class MatchService {
 		Optional<MatchWithPlayers> matchById = matchRepo.getMatchById(matchId);
 		if (matchById.isPresent()) {
 			if (!matchById.get().getMatchState().equals(SIGNUPS)) {
-				throw new ResponseStatusException(HttpStatus.CONFLICT, "Can not resign from an in-progress match, only during signups");
+				throw new ResponseStatusException(
+						HttpStatus.CONFLICT,
+						"Can not resign from an in-progress match, only during signups");
 			}
 			matchRepo.resign(matchById.get(), player);
 		} else {
@@ -121,7 +125,9 @@ public class MatchService {
 		} else if (currentState.equals(POST_MATCH) && newState.equals(COMPLETED)) {
 			completeMatch(match, payload, currentPlayer);
 		} else {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not yet implemented, transition from " + currentState + " to " + newState);
+			throw new ResponseStatusException(
+					HttpStatus.BAD_REQUEST,
+					"Not yet implemented, transition from " + currentState + " to " + newState);
 		}
 		return match;
 	}
@@ -199,7 +205,9 @@ public class MatchService {
 
 		for (MatchSignupWithPlayer signup : match.signups) {
 			if (!payload.containsKey(signup.getPlayerId())) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Payload does not contain an entry for player " + signup.getPlayerId());
+				throw new ResponseStatusException(
+						HttpStatus.BAD_REQUEST,
+						"Payload does not contain an entry for player " + signup.getPlayerId());
 			}
 		}
 
@@ -231,7 +239,7 @@ public class MatchService {
 		match.setMatchState(COMPLETED);
 		matchRepo.update(match);
 
-		if (auditBuilder.length() > 0) {
+		if (!auditBuilder.isEmpty()) {
 			auditBuilder.append("For match ").append(match.getMatchName());
 			String message = auditBuilder.toString();
 			if (message.length() >= 300) {
@@ -243,12 +251,17 @@ public class MatchService {
 
 	public synchronized MatchSignupWithPlayer addCardToMatchDeck(MatchWithPlayers match, Player player, String cardIdentifier, boolean applyFreeUse) {
 		if (!match.getMatchState().equals(DRAFT)) {
-			throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "Can only add to deck during draft phase");
+			throw new ResponseStatusException(
+					HttpStatus.PRECONDITION_FAILED,
+					"Can only add to deck during draft phase");
 		}
 
 		List<CollectionCard> playerCollection = collectionService.getCollection(player);
-		CollectionCard cardInCollection = playerCollection.stream().filter(c -> c.getIdentifier().equals(cardIdentifier)).findFirst()
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Card does not exist in player's collection"));
+		CollectionCard cardInCollection = playerCollection.stream()
+				.filter(c -> c.getIdentifier().equals(cardIdentifier))
+				.findFirst()
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+						"Card does not exist in player's collection"));
 		if (cardInCollection.getQuantity() < 1) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Card has no quantity in player's collection");
 		}
@@ -259,13 +272,16 @@ public class MatchService {
 		}
 
 		Optional<Card> existingCardSelection = matchSignup.getCard(cardInCollection.getCardCategory());
-		if (existingCardSelection.isPresent() && mainCategories.contains(existingCardSelection.get().getCardCategory())) {
+		if (existingCardSelection.isPresent() && mainCategories.contains(existingCardSelection.get()
+				.getCardCategory())) {
 			removeCardFromMatchDeck(match, player, existingCardSelection.get().getIdentifier());
 		}
 
 		if (applyFreeUse) {
 			String freeUseCardTraitType = cardInCollection.getGrantsFreeUseOfCard()
-					.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Card does not come with a free use card"));
+					.orElseThrow(() -> new ResponseStatusException(
+							HttpStatus.BAD_REQUEST,
+							"Card does not come with a free use card"));
 			Card freeUseCard = sourceDataRepo.getBaseCardByTraitType(freeUseCardTraitType);
 			existingCardSelection = matchSignup.getCard(freeUseCard.getCardCategory());
 			existingCardSelection.ifPresent(card -> removeCardFromMatchDeck(match, player, card.getIdentifier()));
@@ -281,7 +297,9 @@ public class MatchService {
 
 	public synchronized MatchSignupWithPlayer removeCardFromMatchDeck(MatchWithPlayers match, Player player, String cardIdentifier) {
 		if (!match.getMatchState().equals(DRAFT)) {
-			throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "Can only remove from deck during draft phase");
+			throw new ResponseStatusException(
+					HttpStatus.PRECONDITION_FAILED,
+					"Can only remove from deck during draft phase");
 		}
 
 		MatchSignupWithPlayer matchSignup = getSignup(match, player);
@@ -317,7 +335,9 @@ public class MatchService {
 
 	public MatchSignupWithPlayer updateStartBias(MatchWithPlayers match, Player player, String biasCivType) {
 		if (!match.getMatchState().equals(DRAFT)) {
-			throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "Can only update start bias during draft phase");
+			throw new ResponseStatusException(
+					HttpStatus.PRECONDITION_FAILED,
+					"Can only update start bias during draft phase");
 		}
 
 		if (!sourceDataRepo.civNameByCivType.containsKey(biasCivType)) {
@@ -326,7 +346,15 @@ public class MatchService {
 
 		MatchSignupWithPlayer matchSignup = getSignup(match, player);
 		if (matchSignup.getCommitted()) {
-			throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "Can not change start bias once committed");
+			throw new ResponseStatusException(
+					HttpStatus.PRECONDITION_FAILED,
+					"Can not change start bias once committed");
+		}
+		if (matchSignup.getSelectedCards().stream().noneMatch(card -> biasCivType.equals(card.getCivilizationType()))) {
+			throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED,
+					"Bias " + biasCivType + " does not correspond to any card in match " + match.getMatchId()
+							+ " chosen by player " + player.getPlayerId() + " (they picked "
+							+ matchSignup.getSelectedCards().size() + " cards).");
 		}
 
 		matchSignup.setStartBiasCivType(biasCivType);
@@ -336,14 +364,19 @@ public class MatchService {
 	}
 
 	public void updateSecretObjectiveSelection(SecretObjective secretObjective) {
-		MatchWithPlayers match = matchRepo.getMatchById(secretObjective.getMatchId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		MatchWithPlayers match = matchRepo.getMatchById(secretObjective.getMatchId())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		if (!match.getMatchState().equals(DRAFT)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can only modify secret objective selections during draft phase");
+			throw new ResponseStatusException(
+					HttpStatus.BAD_REQUEST,
+					"Can only modify secret objective selections during draft phase");
 		}
 
 		MatchSignupWithPlayer signup = getSignup(match, secretObjective.getPlayerId());
 		if (signup.getCommitted()) {
-			throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "Can not change objective selection once committed");
+			throw new ResponseStatusException(
+					HttpStatus.PRECONDITION_FAILED,
+					"Can not change objective selection once committed");
 		}
 
 		objectivesService.update(secretObjective);
@@ -360,8 +393,10 @@ public class MatchService {
 		}
 
 		for (CardCategory category : mainCategories) {
-			if (matchSignup.getCard(category) == null) {
-				throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "All cards must be assigned to commit");
+			if (matchSignup.getCard(category).isEmpty()) {
+				throw new ResponseStatusException(
+						HttpStatus.PRECONDITION_FAILED,
+						"All cards must be assigned to commit");
 			}
 		}
 		if (matchSignup.getStartBiasCivType() == null) {
@@ -376,7 +411,9 @@ public class MatchService {
 			throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "You must select 3 secret objectives");
 		}
 //		if (selectedSecretObjectives > 5) {
-//			throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "Can select a maximum of 5 secret objectives");
+//			throw new ResponseStatusException(
+// 					HttpStatus.PRECONDITION_FAILED,
+//					"Can select a maximum of 5 secret objectives");
 //		}
 
 		matchSignup.setCommitted(true);
@@ -394,7 +431,9 @@ public class MatchService {
 		}
 
 		if (!match.getMatchState().equals(DRAFT)) {
-			throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "Can only uncommit during the draft phase");
+			throw new ResponseStatusException(
+					HttpStatus.PRECONDITION_FAILED,
+					"Can only uncommit during the draft phase");
 		}
 
 		matchSignup.setCommitted(false);
@@ -409,7 +448,9 @@ public class MatchService {
 
 	private MatchSignupWithPlayer getSignup(MatchWithPlayers match, String playerId) {
 		return match.signups.stream().filter(signup -> signup.getPlayerId().equals(playerId)).findFirst()
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Player is not part of specified match"));
+				.orElseThrow(() -> new ResponseStatusException(
+						HttpStatus.BAD_REQUEST,
+						"Player is not part of specified match"));
 	}
 
 	private void checkForAllCommitted(MatchWithPlayers match) {
@@ -434,15 +475,20 @@ public class MatchService {
 		if (match.getMatchState().equals(SIGNUPS)) {
 			matchRepo.delete(match);
 		} else {
-			throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "Can only delete a match in SIGNUPS phase");
+			throw new ResponseStatusException(
+					HttpStatus.PRECONDITION_FAILED,
+					"Can only delete a match in SIGNUPS phase");
 		}
 	}
 
 	public void toggleSpectator(int matchId) {
-		MatchWithPlayers match = matchRepo.getMatchById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		MatchWithPlayers match =
+				matchRepo.getMatchById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
 		if (!match.getMatchState().equals(SIGNUPS)) {
-			throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "Can only toggle spectator during SIGNUPS phase");
+			throw new ResponseStatusException(
+					HttpStatus.PRECONDITION_FAILED,
+					"Can only toggle spectator during SIGNUPS phase");
 		}
 
 		match.setSpectator(!match.getSpectator());
