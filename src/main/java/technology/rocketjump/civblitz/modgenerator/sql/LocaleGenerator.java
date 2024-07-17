@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 import technology.rocketjump.civblitz.model.Card;
 import technology.rocketjump.civblitz.model.CardCategory;
 import technology.rocketjump.civblitz.modgenerator.BlitzFileGenerator;
+import technology.rocketjump.civblitz.modgenerator.ModData;
 import technology.rocketjump.civblitz.modgenerator.ModHeaderGenerator;
-import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
 import technology.rocketjump.civblitz.modgenerator.model.ModdedCivInfo;
 import technology.rocketjump.civblitz.modgenerator.sql.actsofgod.ActOfGod;
 
@@ -18,18 +18,18 @@ import java.util.stream.Stream;
 public class LocaleGenerator extends BlitzFileGenerator {
 
 	@Override
-	public String getFileContents(ModHeader modHeader, ModdedCivInfo civInfo) {
+	public String getFileContents(ModData modData, ModdedCivInfo civInfo) {
 		return getLocalizedTextSplitSql(civInfo.selectedCards.stream()) + getCivLocale(civInfo);
 	}
 
 	@Override
-	public String getFileContents(ModHeader modHeader, List<ModdedCivInfo> civs) {
+	public String getFileContents(ModData modData, List<ModdedCivInfo> civs) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getLocalizedTextSplitSql(civs.stream().flatMap(civInfo -> civInfo.selectedCards.stream())));
 		for (ModdedCivInfo civ : civs) {
 			builder.append(getCivLocale(civ));
 		}
-		for (ActOfGod actOfGod : modHeader.actsOfGod) {
+		for (ActOfGod actOfGod : modData.actsOfGod()) {
 			actOfGod.applyLocalisationChanges(builder);
 		}
 		return builder.toString();

@@ -3,6 +3,7 @@ package technology.rocketjump.civblitz.modgenerator.dep;
 import org.springframework.stereotype.Component;
 import org.stringtemplate.v4.ST;
 import technology.rocketjump.civblitz.modgenerator.BlitzFileGenerator;
+import technology.rocketjump.civblitz.modgenerator.ModData;
 import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
 import technology.rocketjump.civblitz.modgenerator.model.ModdedCivInfo;
 
@@ -12,10 +13,10 @@ import java.util.UUID;
 @Component
 public class ArtDepGenerator extends BlitzFileGenerator {
 	@Override
-	public String getFileContents(ModHeader modHeader, ModdedCivInfo civInfo) {
+	public String getFileContents(ModData modData, ModdedCivInfo civInfo) {
 		// Using ModHeader as an identifying header for this GameDependency.
-		String depName = modHeader.modName + "Art";
-		ModHeader fileHeader = new ModHeader(depName, "", UUID.nameUUIDFromBytes(depName.getBytes()), List.of());
+		String depName = modData.header().modName + "Art";
+		ModHeader fileHeader = new ModHeader(depName, "", UUID.nameUUIDFromBytes(depName.getBytes()));
 		return new ST("""
 				<?xml version="1.0" encoding="UTF-8"?>
 				<AssetObjects..GameDependencyData>
@@ -349,7 +350,7 @@ public class ArtDepGenerator extends BlitzFileGenerator {
 	}
 
 	@Override
-	public String getFileContents(ModHeader modHeader, List<ModdedCivInfo> civs) {
-		return getFileContents(modHeader, (ModdedCivInfo) null);
+	public String getFileContents(ModData modData, List<ModdedCivInfo> civs) {
+		return getFileContents(modData, (ModdedCivInfo) null);
 	}
 }

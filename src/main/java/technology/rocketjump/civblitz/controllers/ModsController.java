@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import technology.rocketjump.civblitz.codegen.tables.pojos.Match;
+import technology.rocketjump.civblitz.mapgen.MapSettings;
 import technology.rocketjump.civblitz.matches.MatchRepo;
 import technology.rocketjump.civblitz.model.Card;
 import technology.rocketjump.civblitz.model.MatchSignupWithPlayer;
@@ -46,7 +48,8 @@ public class ModsController {
 						 HttpServletResponse response) throws IOException {
 		response.setContentType("application/zip");
 		response.setStatus(HttpServletResponse.SC_OK);
-		List<Card> selectedCards = cardIdentifiers.stream().map(sourceDataRepo::getByIdentifier).collect(Collectors.toList());
+		List<Card> selectedCards =
+				cardIdentifiers.stream().map(sourceDataRepo::getByIdentifier).collect(Collectors.toList());
 
 		String modName = modHeaderGenerator.createFor(selectedCards).modName;
 		response.addHeader("Content-Disposition", "attachment; filename=\"CivBlitz_"+modName+".zip\"");
@@ -73,7 +76,20 @@ public class ModsController {
 		response.addHeader("Content-Disposition",
 				"attachment; filename=\"CivBlitz_" + ModgenStringUtils.NormalizeString(modName) + ".zip\"");
 
-		return completeModGenerator.generateMod(match.getMatchName(), civs);
+		return completeModGenerator.generateMod(match.getMatchName(), mapSettingsFor(match), civs);
 	}
 
+	private MapSettings mapSettingsFor(Match match) {
+		return new MapSettings(
+				match.getStartEra(),
+				match.getMapType(),
+				match.getMapSize(),
+				match.getWorldAge(),
+				match.getSeaLevel(),
+				match.getTemperature(),
+				match.getRainfall(),
+				match.getCityStates(),
+				match.getDisasterIntensity()
+		);
+	}
 }

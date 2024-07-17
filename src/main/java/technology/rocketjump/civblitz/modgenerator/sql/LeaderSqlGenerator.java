@@ -6,8 +6,8 @@ import technology.rocketjump.civblitz.model.Card;
 import technology.rocketjump.civblitz.model.CardCategory;
 import technology.rocketjump.civblitz.model.SourceDataRepo;
 import technology.rocketjump.civblitz.modgenerator.BlitzFileGenerator;
+import technology.rocketjump.civblitz.modgenerator.ModData;
 import technology.rocketjump.civblitz.modgenerator.ModHeaderGenerator;
-import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
 import technology.rocketjump.civblitz.modgenerator.model.ModdedCivInfo;
 import technology.rocketjump.civblitz.modgenerator.sql.actsofgod.ActOfGod;
 
@@ -23,7 +23,7 @@ public class LeaderSqlGenerator extends BlitzFileGenerator {
 	}
 
 	@Override
-	public String getFileContents(ModHeader modHeader, ModdedCivInfo civInfo) {
+	public String getFileContents(ModData modData, ModdedCivInfo civInfo) {
 		StringBuilder sqlBuilder = new StringBuilder();
 
 		String modName = ModHeaderGenerator.buildName(civInfo.selectedCards).toUpperCase();
@@ -71,7 +71,7 @@ public class LeaderSqlGenerator extends BlitzFileGenerator {
 					.append("VALUES ('LEADER_IMP_").append(modName).append("', 1);\n");
 		}
 
-		for (ActOfGod actOfGod : modHeader.actsOfGod) {
+		for (ActOfGod actOfGod : modData.actsOfGod()) {
 			actOfGod.applyToLeaderTrait(leaderCard.getTraitType(), modName, sqlBuilder);
 		}
 
@@ -144,10 +144,10 @@ public class LeaderSqlGenerator extends BlitzFileGenerator {
 	}
 
 	@Override
-	public String getFileContents(ModHeader modHeader, List<ModdedCivInfo> civs) {
+	public String getFileContents(ModData modData, List<ModdedCivInfo> civs) {
 		StringBuilder builder = new StringBuilder();
-		builder.append(super.getFileContents(modHeader, civs));
-		for (ActOfGod actOfGod : modHeader.actsOfGod) {
+		builder.append(super.getFileContents(modData, civs));
+		for (ActOfGod actOfGod : modData.actsOfGod()) {
 			actOfGod.applyGlobalChanges(builder);
 		}
 		return builder.toString();

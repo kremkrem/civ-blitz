@@ -6,8 +6,8 @@ import technology.rocketjump.civblitz.model.CardCategory;
 import technology.rocketjump.civblitz.model.IconAtlasEntry;
 import technology.rocketjump.civblitz.model.SourceDataRepo;
 import technology.rocketjump.civblitz.modgenerator.BlitzFileGenerator;
+import technology.rocketjump.civblitz.modgenerator.ModData;
 import technology.rocketjump.civblitz.modgenerator.ModHeaderGenerator;
-import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
 import technology.rocketjump.civblitz.modgenerator.model.ModdedCivInfo;
 
 @Component
@@ -21,20 +21,32 @@ public class IconsSqlGenerator extends BlitzFileGenerator {
 	}
 
 	@Override
-	public String getFileContents(ModHeader modHeader, ModdedCivInfo civInfo) {
-		StringBuilder sqlBuilder = new StringBuilder();
-
+	public String getFileContents(ModData modData, ModdedCivInfo civInfo) {
 		String name = ModHeaderGenerator.buildName(civInfo.selectedCards).toUpperCase();
 
-		IconAtlasEntry civIconEntry = sourceDataRepo.getIconAtlasEntry(civInfo.getCard(CardCategory.CivilizationAbility).getCivilizationType());
-		IconAtlasEntry leaderIconEntry = sourceDataRepo.getIconAtlasEntry(civInfo.getCard(CardCategory.LeaderAbility).getLeaderType().orElseThrow());
+		IconAtlasEntry civIconEntry =
+				sourceDataRepo.getIconAtlasEntry(civInfo.getCard(CardCategory.CivilizationAbility)
+				.getCivilizationType());
+		IconAtlasEntry leaderIconEntry = sourceDataRepo.getIconAtlasEntry(civInfo.getCard(CardCategory.LeaderAbility)
+				.getLeaderType()
+				.orElseThrow());
 
-		sqlBuilder.append("INSERT OR REPLACE INTO IconDefinitions\n" +
-				"\t\t(Name,\t\t\t\t\t\t\t\t\tAtlas, \t\t\t\t\t\t\t\t\t'Index')\n" +
-				"VALUES\t('ICON_CIVILIZATION_IMP_").append(name).append("',\t\t'").append(civIconEntry.atlasName).append("',\t\t\t").append(civIconEntry.index).append("),\n" +
-				"\t\t('ICON_LEADER_IMP_").append(name).append("',\t\t\t'").append(leaderIconEntry.atlasName).append("',\t\t\t\t").append(leaderIconEntry.index).append(");\n");
-
-		return sqlBuilder.toString();
+		return "INSERT OR REPLACE INTO IconDefinitions\n" +
+				"(Name, Atlas,  'Index')\n" +
+				"VALUES\t('ICON_CIVILIZATION_IMP_"
+				+ name
+				+ "', '"
+				+ civIconEntry.atlasName
+				+ "', "
+				+ civIconEntry.index
+				+ "),\n" +
+				"\t\t('ICON_LEADER_IMP_"
+				+ name
+				+ "', '"
+				+ leaderIconEntry.atlasName
+				+ "', "
+				+ leaderIconEntry.index
+				+ ");\n";
 	}
 
 	@Override

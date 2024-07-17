@@ -13,14 +13,14 @@ public class ModInfoGenerator extends BlitzFileGenerator {
 	private String modName = "UNSET";
 
 	@Override
-	public String getFileContents(ModHeader modHeader, ModdedCivInfo civInfo) {
-		modName = modHeader.modName;
-		return getModInfoContent(modHeader);
+	public String getFileContents(ModData modData, ModdedCivInfo civInfo) {
+		modName = modData.header().modName;
+		return getModInfoContent(modData.header());
 	}
 
 	@Override
-	public String getFileContents(ModHeader modHeader, List<ModdedCivInfo> civs) {
-		return getFileContents(modHeader, (ModdedCivInfo) null);
+	public String getFileContents(ModData modData, List<ModdedCivInfo> civs) {
+		return getFileContents(modData, (ModdedCivInfo) null);
 	}
 
 	public String getModInfoContent(ModHeader modHeader) {

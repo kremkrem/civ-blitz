@@ -8,8 +8,8 @@ import technology.rocketjump.civblitz.model.Card;
 import technology.rocketjump.civblitz.model.CardCategory;
 import technology.rocketjump.civblitz.model.SourceDataRepo;
 import technology.rocketjump.civblitz.modgenerator.BlitzFileGenerator;
+import technology.rocketjump.civblitz.modgenerator.ModData;
 import technology.rocketjump.civblitz.modgenerator.ModHeaderGenerator;
-import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
 import technology.rocketjump.civblitz.modgenerator.model.ModdedCivInfo;
 
 import java.util.Comparator;
@@ -28,7 +28,7 @@ public class ConfigurationSqlGenerator extends BlitzFileGenerator {
 	}
 
 	@Override
-	public String getFileContents(ModHeader modHeader, ModdedCivInfo civInfo) {
+	public String getFileContents(ModData modData, ModdedCivInfo civInfo) {
 		String modName = ModHeaderGenerator.buildName(civInfo.selectedCards).toUpperCase();
 
 		Card civAbilityCard = civInfo.getCard(CardCategory.CivilizationAbility);

@@ -5,8 +5,8 @@ import org.stringtemplate.v4.ST;
 import technology.rocketjump.civblitz.model.Card;
 import technology.rocketjump.civblitz.model.CardCategory;
 import technology.rocketjump.civblitz.modgenerator.BlitzFileGenerator;
+import technology.rocketjump.civblitz.modgenerator.ModData;
 import technology.rocketjump.civblitz.modgenerator.ModHeaderGenerator;
-import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
 import technology.rocketjump.civblitz.modgenerator.model.ModdedCivInfo;
 import technology.rocketjump.civblitz.modgenerator.sql.actsofgod.ActOfGod;
 
@@ -17,7 +17,7 @@ import static technology.rocketjump.civblitz.model.CardCategory.Power;
 public class CivTraitsSqlGenerator extends BlitzFileGenerator {
 
 	@Override
-	public String getFileContents(ModHeader modHeader, ModdedCivInfo civInfo) {
+	public String getFileContents(ModData modData, ModdedCivInfo civInfo) {
 		final String modName = ModHeaderGenerator.buildName(civInfo.selectedCards).toUpperCase();
 		final StringBuilder sqlBuilder = new StringBuilder();
 
@@ -29,7 +29,7 @@ public class CivTraitsSqlGenerator extends BlitzFileGenerator {
 					addCivTraitLine(sqlBuilder, card.getGrantsTraitType().get(), modName);
 				}
 				if (cardCategory.equals(CivilizationAbility)) {
-					for (ActOfGod actOfGod : modHeader.actsOfGod) {
+					for (ActOfGod actOfGod : modData.actsOfGod()) {
 						actOfGod.applyToCivTrait(card.getTraitType(), modName, sqlBuilder);
 					}
 				}

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import technology.rocketjump.civblitz.modgenerator.BlitzFileGenerator;
+import technology.rocketjump.civblitz.modgenerator.ModData;
 import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
 import technology.rocketjump.civblitz.modgenerator.model.ModdedCivInfo;
 
@@ -19,7 +20,7 @@ public abstract class ArtDefGenerator extends BlitzFileGenerator {
 	XmlBuildersProvider xmlBuildersProvider;
 
 	@Override
-	public String getFileContents(ModHeader modHeader, List<ModdedCivInfo> civs) {
+	public String getFileContents(ModData modData, List<ModdedCivInfo> civs) {
 		Document document = xmlBuildersProvider.getDocumentBuilder().newDocument();
 		Element root = document.createElement("AssetObjects..ArtDefSet");
 
@@ -29,7 +30,7 @@ public abstract class ArtDefGenerator extends BlitzFileGenerator {
 		root.appendChild(templateName);
 
 		Element rootCollections = document.createElement("m_RootCollections");
-		for (Collection collection : getRootCollections(modHeader, civs)) {
+		for (Collection collection : getRootCollections(modData.header(), civs)) {
 			rootCollections.appendChild(collection.toElement(document));
 		}
 		root.appendChild(rootCollections);
@@ -48,8 +49,8 @@ public abstract class ArtDefGenerator extends BlitzFileGenerator {
 	}
 
 	@Override
-	public String getFileContents(ModHeader modHeader, ModdedCivInfo civInfo) {
-		return getFileContents(modHeader, List.of(civInfo));
+	public String getFileContents(ModData modData, ModdedCivInfo civInfo) {
+		return getFileContents(modData, List.of(civInfo));
 	}
 
 	protected abstract String getTemplateName();

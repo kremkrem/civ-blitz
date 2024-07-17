@@ -6,12 +6,18 @@ import technology.rocketjump.civblitz.model.Card;
 import technology.rocketjump.civblitz.model.CardCategory;
 import technology.rocketjump.civblitz.model.CardRarity;
 import technology.rocketjump.civblitz.modgenerator.model.ModHeader;
-import technology.rocketjump.civblitz.modgenerator.sql.actsofgod.ActOfGod;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static technology.rocketjump.civblitz.model.CardCategory.*;
+import static technology.rocketjump.civblitz.model.CardCategory.ActOfGod;
+import static technology.rocketjump.civblitz.model.CardCategory.CivilizationAbility;
+import static technology.rocketjump.civblitz.model.CardCategory.LeaderAbility;
+import static technology.rocketjump.civblitz.model.CardCategory.UniqueInfrastructure;
+import static technology.rocketjump.civblitz.model.CardCategory.UniqueUnit;
+import static technology.rocketjump.civblitz.model.CardCategory.mainCategories;
 
 @Component
 public class ModHeaderGenerator {
@@ -23,7 +29,7 @@ public class ModHeaderGenerator {
 		String modName = StringUtils.replace(matchName, " ", "_");
 		modName = StringUtils.replace(modName, "/", "_");
 
-		return new ModHeader(modName, description, UUID.nameUUIDFromBytes(modName.getBytes()), List.of());
+		return new ModHeader(modName, description, UUID.nameUUIDFromBytes(modName.getBytes()));
 	}
 
 	public ModHeader createFor(List<Card> selectedCards) {
@@ -43,9 +49,7 @@ public class ModHeaderGenerator {
 				descriptionBuilder.append("\n* ").append(c.getBaseCardName());
 			}
 		}
-		List<ActOfGod> actsOfGod =
-				actOfGodCards.stream().map(Card::getActOfGod).filter(Optional::isPresent).map(Optional::get).toList();
-		return new ModHeader(name, descriptionBuilder.toString(), UUID.nameUUIDFromBytes(name.getBytes()), actsOfGod);
+		return new ModHeader(name, descriptionBuilder.toString(), UUID.nameUUIDFromBytes(name.getBytes()));
 	}
 
 	public static String buildName(List<Card> selectedCards) {
