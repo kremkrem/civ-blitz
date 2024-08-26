@@ -44,7 +44,8 @@ const App = ({location, history}) => {
                 discordUsername: decoded.username,
                 discordId: decoded.sub,
                 discordAvatar: decoded.avatar,
-                isAdmin: decoded.is_admin
+                isAdmin: decoded.is_admin,
+                isSuperAdmin: decoded.is_super_admin
             });
         }
 

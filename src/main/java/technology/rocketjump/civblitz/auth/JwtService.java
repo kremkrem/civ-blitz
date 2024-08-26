@@ -31,6 +31,7 @@ public class JwtService {
 				.withClaim("username", player.getDiscordUsername())
 				.withClaim("avatar", player.getDiscordAvatar())
 				.withClaim("is_admin", player.getIsAdmin())
+				.withClaim("is_super_admin", player.getIsSuperAdmin())
 				.withClaim("access_token", accessToken.getAccess_token())
 				.withClaim("refresh_token", accessToken.getRefresh_token())
 				.sign(algorithm);

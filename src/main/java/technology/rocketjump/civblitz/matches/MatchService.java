@@ -199,16 +199,17 @@ public class MatchService {
 	}
 
 	private synchronized void completeMatch(MatchWithPlayers match, Map<String, Object> payload, Player currentPlayer) {
-//		if (match.signups.stream().anyMatch(s -> s.getPlayerId().equals(currentPlayer.getPlayerId()))) {
-//			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Can not complete a match you played in");
-//		}
-
 		for (MatchSignupWithPlayer signup : match.signups) {
 			if (!payload.containsKey(signup.getPlayerId())) {
 				throw new ResponseStatusException(
 						HttpStatus.BAD_REQUEST,
 						"Payload does not contain an entry for player " + signup.getPlayerId());
 			}
+		}
+		if (!currentPlayer.getIsSuperAdmin() && match.signups.stream()
+				.map(MatchSignup::getPlayerId)
+				.anyMatch(id -> currentPlayer.getPlayerId().equals(id))) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Admin can not complete a match they played in");
 		}
 
 		Map<String, Integer> leaderboard = leaderboardService.getLeaderboard(match);
