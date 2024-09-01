@@ -43,7 +43,7 @@ public class PlayersParser {
 				sourceDataRepo.leaderIconByLeaderType.put(leaderType, record.get("LeaderIcon"));
 				sourceDataRepo.leaderAbilityIconByLeaderType.put(leaderType, record.get("LeaderAbilityIcon"));
 				sourceDataRepo.civNameByCivType.put(civType, record.get("CivilizationName"));
-				sourceDataRepo.civIconByCivType.put(civType, record.get("CivilizationAbilityIcon"));
+				sourceDataRepo.civIconByCivType.put(civType, record.get("CivilizationIcon"));
 				sourceDataRepo.civAbilityNameByCivType.put(civType, record.get("CivilizationAbilityName"));
 				sourceDataRepo.civAbilityDescByCivType.put(civType, record.get("CivilizationAbilityDescription"));
 				sourceDataRepo.civAbilityIconByCivType.put(civType, record.get("CivilizationAbilityIcon"));
