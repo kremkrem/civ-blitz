@@ -212,11 +212,11 @@ public class MatchService {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Admin can not complete a match they played in");
 		}
 
-		Map<String, Integer> leaderboard = leaderboardService.getLeaderboard(match);
+		Map<String, LeaderboardService.Entry> leaderboard = leaderboardService.getLeaderboard(match);
 
 		StringBuilder auditBuilder = new StringBuilder();
 		for (MatchSignupWithPlayer signup : match.signups) {
-			int leaderboardStarAmount = leaderboard.get(signup.getPlayerId());
+			int leaderboardStarAmount = leaderboard.get(signup.getPlayerId()).objectiveScore();
 			int awardedStarAmount = (Integer) payload.get(signup.getPlayerId());
 			if (awardedStarAmount != leaderboardStarAmount) {
 				if (awardedStarAmount < leaderboardStarAmount) {

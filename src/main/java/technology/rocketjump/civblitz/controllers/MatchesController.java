@@ -140,7 +140,7 @@ public class MatchesController {
 	}
 
 	@GetMapping("/{matchId}/leaderboard")
-	public Map<String, Integer> getLeaderboard(@PathVariable int matchId) {
+	public Map<String, LeaderboardService.Entry> getLeaderboard(@PathVariable int matchId) {
 		MatchWithPlayers match =
 				matchService.getById(matchId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		return leaderboardService.getLeaderboard(match);

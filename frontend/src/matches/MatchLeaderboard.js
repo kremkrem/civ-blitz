@@ -14,21 +14,45 @@ const MatchLeaderboard = ({match, leaderboard, loggedInPlayer, leaderboardChange
 
     const updateScore = (playerId, score) => {
         const newLeaderboard = {...leaderboard}
-        newLeaderboard[playerId] = Number(score);
+        if (!Number.isInteger(newLeaderboard[playerId]) && ('objectiveScore' in newLeaderboard[playerId])) {
+            const newScore = {...newLeaderboard[playerId]}
+            newScore.finalScore = Number(score);
+            newLeaderboard[playerId] = newScore;
+        } else {
+            newLeaderboard[playerId] = Number(score);
+        }
         leaderboardChanged(newLeaderboard);
     }
 
     for (const [playerId, score] of Object.entries(leaderboard)) {
         const signup = match.signups.find(signup => signup.playerId === playerId);
         const stars = [];
-        for (let starNum = 0; starNum < score; starNum++) {
-            stars.push(<Icon size='large' color='yellow' name='star' />);
+        let finalScore = 0;
+        if (!Number.isInteger(score) && ('objectiveScore' in score)) {
+            finalScore = ('finalScore' in score && score.finalScore != null)
+                ? score.finalScore : score.objectiveScore;
+            const yellowStarCount = Math.min(score.objectiveScore, finalScore);
+
+            for (let starNum = 0; starNum < yellowStarCount; starNum++) {
+                stars.push(<Icon size='large' color='yellow' name='star'/>);
+            }
+            for (let starNum = score.objectiveScore; starNum < finalScore; starNum++) {
+                stars.push(<Icon size='large' color='blue' name='star'/>);
+            }
+            for (let starNum = finalScore; starNum < score.objectiveScore; starNum++) {
+                stars.push(<Icon size='large' disabled color='red' name='star outline'/>)
+            }
+        } else {
+            finalScore = score;
+            for (let starNum = 0; starNum < score; starNum++) {
+                stars.push(<Icon size='large' color='yellow' name='star'/>);
+            }
         }
 
         tableRows.push(<Table.Row key={playerId}>
             <Table.Cell>
                 <Header as='h4' image>
-                    <PlayerAvatar player={signup.player} />
+                    <PlayerAvatar player={signup.player}/>
                     <Header.Content>
                         {signup.player.discordUsername}
                     </Header.Content>
@@ -36,9 +60,10 @@ const MatchLeaderboard = ({match, leaderboard, loggedInPlayer, leaderboardChange
             </Table.Cell>
             <Table.Cell>{stars}</Table.Cell>
             {canBeCompleted &&
-            <Table.Cell>
-                <Input type='number' value={score} onChange={(event, data) => updateScore(playerId, data.value)} />
-            </Table.Cell>
+                <Table.Cell>
+                    <Input type='number' value={finalScore}
+                           onChange={(event, data) => updateScore(playerId, data.value)}/>
+                </Table.Cell>
             }
         </Table.Row>);
     }
@@ -47,7 +72,17 @@ const MatchLeaderboard = ({match, leaderboard, loggedInPlayer, leaderboardChange
     const history = useHistory();
 
     const completeMatch = () => {
-        axios.put('/api/matches/'+match.matchId+'/COMPLETED', leaderboard)
+        const uploadableLeaderboard = {}
+        for (const [playerId, score] of Object.entries(leaderboard)) {
+            if (Number.isInteger(score)) {
+                uploadableLeaderboard[playerId] = score;
+            } else if ('finalScore' in score) {
+                uploadableLeaderboard[playerId] = score.finalScore;
+            } else {
+                uploadableLeaderboard[playerId] = score.objectiveScore;
+            }
+        }
+        axios.put('/api/matches/'+match.matchId+'/COMPLETED', uploadableLeaderboard)
             .then(response => {
                 history.push("/matches");
             })
